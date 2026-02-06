@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Для тебя ❤️</title>
+
+<style>
+body {
+    margin:0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg,#ff6b81,#ff9ff3);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    color:white;
+    text-align:center;
+}
+
+.container {
+    max-width:600px;
+    padding:30px;
+}
+
+button {
+    background:white;
+    color:#ff4d6d;
+    border:none;
+    padding:15px 30px;
+    font-size:20px;
+    border-radius:50px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover {
+    transform:scale(1.1);
+}
+
+.hidden {
+    display:none;
+}
+
+h1 {
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+p {
+    font-size:22px;
+}
+
+.heart {
+    position:absolute;
+    color:white;
+    font-size:20px;
+    animation: float 6s linear infinite;
+}
+
+@keyframes float {
+    from { transform: translateY(100vh); opacity:1;}
+    to { transform: translateY(-10vh); opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div id="first">
+        <h1>У меня есть вопрос…</h1>
+        <p>Открой, если готова к маленькому сюрпризу ❤️</p>
+        <button onclick="showLove()">Открыть</button>
+    </div>
+
+    <div id="second" class="hidden">
+        <h1>С Днём Святого Валентина 💘</h1>
+        <p>
+            Ты — самое лучшее, что случилось со мной.<br><br>
+            Спасибо за твою улыбку,<br>
+            твою поддержку и твоё тепло.<br><br>
+            Я люблю тебя ❤️
+        </p>
+    </div>
+</div>
+
+<script>
+function showLove(){
+    document.getElementById("first").classList.add("hidden");
+    document.getElementById("second").classList.remove("hidden");
+    createHearts();
+}
+
+function createHearts(){
+    setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random()*100 + "vw";
+        heart.style.fontSize = (Math.random()*20+10)+"px";
+        document.body.appendChild(heart);
+
+        setTimeout(()=>{ heart.remove(); },6000);
+    },300);
+}
+</script>
+
+</body>
+</html>
