@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для Снежаны ❤️</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #fff0f3;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 10;
+            max-width: 500px;
+        }
+        h1 { color: #ff4d6d; margin-bottom: 30px; }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            position: relative;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 140px;
+        }
+        #yesBtn { background-color: #ff4d6d; color: white; }
+        #noBtn { background-color: #ffb3c1; color: white; position: relative; }
+        
+        #message { display: none; }
+        .confession { font-size: 20px; color: #590d22; line-height: 1.6; }
+
+        .floating-photo {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 6px solid white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.5s, transform 0.5s;
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <div id="questionArea">
+            <h1>Снежана, ты проведешь со мной этот прекрасный день?</h1>
+            <div class="buttons">
+                <button id="yesBtn">Да, конечно</button>
+                <button id="noBtn">Нет</button>
+            </div>
+        </div>
+        
+        <div id="message">
+            <div class="confession">
+                <p>Снежана, ты — самое прекрасное, что случалось в моей жизни. ❤️</p>
+                <p>Я безумно тебя люблю и хочу, чтобы каждый наш день был особенным. Спасибо тебе за твою нежность, доброту и за то, что ты рядом.</p>
+                <p>Пусть этот день станет еще одной яркой страничкой в нашей истории любви!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Фотографии (увеличенный размер 200x200) -->
+    <img src="photo_2026-02-07_00-00-44.jpg" class="floating-photo" style="top: 8%; left: 3%;" id="p1">
+    <img src="photo_2026-02-07_00-00-48.jpg" class="floating-photo" style="top: 8%; right: 3%;" id="p2">
+    <img src="photo_2026-02-07_00-00-50.jpg" class="floating-photo" style="bottom: 8%; left: 3%;" id="p3">
+    <img src="photo_2026-02-07_00-00-52.jpg" class="floating-photo" style="bottom: 8%; right: 3%;" id="p4">
+    <img src="photo_2026-02-07_00-00-56.jpg" class="floating-photo" style="top: 50%; left: 1%; transform: translateY(-50%);" id="p5">
+    
+    <!-- Дополнительные места для новых фото -->
+    <img src="photo_2026-02-07_00-00-60.jpg" class="floating-photo" style="top: 50%; right: 1%; transform: translateY(-50%);" id="p6">
+    <img src="photo_2026-02-07_00-00-64.jpg" class="floating-photo" style="top: 35%; left: 1.5%;" id="p7">
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const questionArea = document.getElementById('questionArea');
+        const messageArea = document.getElementById('message');
+        const photos = document.querySelectorAll('.floating-photo');
+        let confessed = false;
+
+        // Кнопка "Нет" убегает
+        noBtn.addEventListener('mouseover', () => {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        });
+
+        // Кнопка "Да"
+        yesBtn.addEventListener('click', () => {
+            questionArea.style.display = 'none';
+            messageArea.style.display = 'block';
+            confessed = true;
+        });
+
+        // Появление фото при движении мыши по краям (после признания)
+        window.addEventListener('mousemove', (e) => {
+            if (!confessed) return;
+
+            const margin = 200;
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            if (e.clientX < margin || e.clientX > screenWidth - margin || e.clientY < margin || e.clientY > screenHeight - margin) {
+                photos.forEach(img => {
+                    img.style.opacity = '1';
+                    img.style.transform = 'scale(1.05)';
+                });
+            } else {
+                photos.forEach(img => {
+                    img.style.opacity = '0';
+                    img.style.transform = 'scale(1)';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
