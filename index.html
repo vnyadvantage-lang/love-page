@@ -1,111 +1,233 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Для тебя ❤️</title>
-
-<style>
-body {
-    margin:0;
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg,#ff6b81,#ff9ff3);
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-    color:white;
-    text-align:center;
-}
-
-.container {
-    max-width:600px;
-    padding:30px;
-}
-
-button {
-    background:white;
-    color:#ff4d6d;
-    border:none;
-    padding:15px 30px;
-    font-size:20px;
-    border-radius:50px;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-button:hover {
-    transform:scale(1.1);
-}
-
-.hidden {
-    display:none;
-}
-
-h1 {
-    font-size:40px;
-    margin-bottom:10px;
-}
-
-p {
-    font-size:22px;
-}
-
-.heart {
-    position:absolute;
-    color:white;
-    font-size:20px;
-    animation: float 6s linear infinite;
-}
-
-@keyframes float {
-    from { transform: translateY(100vh); opacity:1;}
-    to { transform: translateY(-10vh); opacity:0;}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для Снежаны ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 40px;
+            max-width: 600px;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+        
+        .question {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .question h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            position: relative;
+            min-height: 80px;
+        }
+        
+        button {
+            padding: 15px 50px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        #yesBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        #yesBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        #noBtn {
+            background: #e0e0e0;
+            color: #666;
+            position: absolute;
+        }
+        
+        .love-message {
+            display: none;
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .love-message h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .love-message p {
+            color: #555;
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        .heart {
+            color: #e74c3c;
+            font-size: 3em;
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+        
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            animation: sparkleFloat 3s linear forwards;
+        }
+        
+        @keyframes sparkleFloat {
+            from {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
-
 <body>
-
-<div class="container">
-    <div id="first">
-        <h1>У меня есть вопрос…</h1>
-        <p>Открой, если готова к маленькому сюрпризу ❤️</p>
-        <button onclick="showLove()">Открыть</button>
+    <div class="container">
+        <h1>Моя дорогая Снежана ❤️</h1>
+        
+        <div class="question" id="questionBox">
+            <h2>Проведёшь ли ты со мной этот прекрасный день?</h2>
+            <div class="buttons">
+                <button id="yesBtn">Да! ❤️</button>
+                <button id="noBtn">Нет</button>
+            </div>
+        </div>
+        
+        <div class="love-message" id="loveMessage">
+            <div class="heart">❤️</div>
+            <h2>Я так счастлив!</h2>
+            <p>Снежана, ты — самое прекрасное, что случилось в моей жизни.</p>
+            <p>Каждый день рядом с тобой наполнен любовью, радостью и смыслом.</p>
+            <p>Твоя улыбка освещает мой мир, а твои глаза — это целая вселенная, в которой я готов потеряться.</p>
+            <p>Спасибо тебе за то, что ты есть. Я люблю тебя больше, чем слова могут выразить.</p>
+            <p><strong>С любовью, навсегда твой ❤️</strong></p>
+        </div>
     </div>
-
-    <div id="second" class="hidden">
-        <h1>С Днём Святого Валентина 💘</h1>
-        <p>
-            Ты — самое лучшее, что случилось со мной.<br><br>
-            Спасибо за твою улыбку,<br>
-            твою поддержку и твоё тепло.<br><br>
-            Я люблю тебя ❤️
-        </p>
-    </div>
-</div>
-
-<script>
-function showLove(){
-    document.getElementById("first").classList.add("hidden");
-    document.getElementById("second").classList.remove("hidden");
-    createHearts();
-}
-
-function createHearts(){
-    setInterval(() => {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerHTML = "❤️";
-        heart.style.left = Math.random()*100 + "vw";
-        heart.style.fontSize = (Math.random()*20+10)+"px";
-        document.body.appendChild(heart);
-
-        setTimeout(()=>{ heart.remove(); },6000);
-    },300);
-}
-</script>
-
+    
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const questionBox = document.getElementById('questionBox');
+        const loveMessage = document.getElementById('loveMessage');
+        
+        // Убегающая кнопка "Нет"
+        noBtn.addEventListener('mouseenter', function() {
+            const maxX = window.innerWidth - noBtn.offsetWidth - 100;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 100;
+            
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        });
+        
+        // Кнопка "Да"
+        yesBtn.addEventListener('click', function() {
+            questionBox.style.display = 'none';
+            loveMessage.style.display = 'block';
+            
+            // Добавляем конфетти
+            createConfetti();
+        });
+        
+        // Конфетти эффект
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.innerHTML = ['❤️', '💕', '💖', '✨', '🌟'][Math.floor(Math.random() * 5)];
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                    document.body.appendChild(sparkle);
+                    
+                    setTimeout(() => sparkle.remove(), 3000);
+                }, i * 50);
+            }
+        }
+    </script>
 </body>
 </html>
