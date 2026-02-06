@@ -62,13 +62,13 @@
         }
         
         button {
-            width: 220px; /* Одинаковый размер */
+            width: 220px;
             height: 65px;
             font-size: 1.3em;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s, box-shadow 0.3s;
             font-weight: bold;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             display: flex;
@@ -79,6 +79,8 @@
         #yesBtn {
             background: linear-gradient(45deg, #ff416c, #ff4b2b);
             color: white;
+            position: relative;
+            z-index: 5;
         }
         
         #yesBtn:hover {
@@ -88,7 +90,6 @@
         #noBtn {
             background: #e0e0e0;
             color: #666;
-            position: absolute;
             z-index: 10;
         }
         
@@ -128,7 +129,7 @@
             font-size: 1.1em;
         }
 
-        /* Галерея */
+        /* Галерея Polaroid */
         .photo-gallery {
             position: fixed;
             top: 0;
@@ -141,9 +142,9 @@
         
         .polaroid {
             position: absolute;
-            width: 240px;
+            width: 260px;
             background: white;
-            padding: 12px 12px 45px 12px;
+            padding: 15px 15px 50px 15px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.4);
             border-radius: 3px;
             opacity: 0;
@@ -153,7 +154,7 @@
         
         .polaroid img {
             width: 100%;
-            height: 260px;
+            height: 280px;
             object-fit: cover;
             border: 1px solid #eee;
         }
@@ -161,12 +162,12 @@
         .polaroid::after {
             content: var(--caption);
             position: absolute;
-            bottom: 12px;
+            bottom: 15px;
             left: 0;
             width: 100%;
             text-align: center;
             font-family: 'Brush Script MT', cursive;
-            font-size: 1.5em;
+            font-size: 1.6em;
             color: #333;
         }
         
@@ -185,9 +186,9 @@
         @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
 
         @media (max-width: 900px) {
-            .polaroid { width: 160px; }
-            .polaroid img { height: 180px; }
-            button { width: 160px; font-size: 1.1em; }
+            .polaroid { width: 170px; }
+            .polaroid img { height: 190px; }
+            button { width: 160px; height: 55px; font-size: 1.1em; }
         }
     </style>
 </head>
@@ -230,8 +231,11 @@
         const loveMsg = document.getElementById('loveMsg');
         const photos = document.querySelectorAll('.polaroid');
         
-        // Убегающая кнопка
         noBtn.addEventListener('mouseover', () => {
+            // Только при наведении кнопка становится абсолютно позиционированной и убегает
+            if (noBtn.style.position !== 'fixed') {
+                noBtn.style.position = 'fixed';
+            }
             const maxX = window.innerWidth - noBtn.offsetWidth;
             const maxY = window.innerHeight - noBtn.offsetHeight;
             noBtn.style.left = Math.random() * maxX + 'px';
@@ -249,7 +253,6 @@
                 const x = e.clientX / window.innerWidth;
                 const y = e.clientY / window.innerHeight;
                 
-                // Проявление фото у краев
                 if (x < 0.3 || x > 0.7 || y < 0.3 || y > 0.7) {
                     photos.forEach((p, i) => {
                         setTimeout(() => p.classList.add('visible'), i * 200);
