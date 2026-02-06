@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Для Снежаны ❤️ (С фото)</title>
+    <title>Для Снежаны ❤️</title>
     <style>
         * {
             margin: 0;
@@ -25,7 +25,7 @@
         .container {
             text-align: center;
             padding: 40px;
-            max-width: 600px;
+            max-width: 650px;
             z-index: 100;
             position: relative;
         }
@@ -33,36 +33,37 @@
         h1 {
             color: white;
             font-size: 3em;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            animation: fadeIn 1.5s ease-out;
         }
         
         .question-box {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             padding: 50px 40px;
             border-radius: 30px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: slideUp 1s ease-out;
         }
         
         .question-box h2 {
             color: #b21f1f;
             font-size: 2em;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            line-height: 1.3;
         }
         
         .buttons {
             display: flex;
-            gap: 25px;
+            gap: 20px;
             justify-content: center;
             position: relative;
-            min-height: 70px;
+            min-height: 80px;
+            align-items: center;
         }
         
         button {
-            padding: 18px 45px;
+            width: 220px; /* Одинаковый размер */
+            height: 65px;
             font-size: 1.3em;
             border: none;
             border-radius: 50px;
@@ -70,6 +71,9 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: bold;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         #yesBtn {
@@ -79,34 +83,52 @@
         
         #yesBtn:hover {
             transform: scale(1.1);
-            box-shadow: 0 15px 30px rgba(255, 65, 108, 0.4);
         }
         
         #noBtn {
             background: #e0e0e0;
             color: #666;
             position: absolute;
+            z-index: 10;
         }
         
-        .final-message {
+        .love-message {
             display: none;
-            color: white;
-            animation: fadeIn 2s ease-in;
+            background: white;
+            padding: 50px 40px;
+            border-radius: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            animation: fadeIn 1s ease-out;
         }
         
-        .final-message h2 {
-            font-size: 3.5em;
-            margin-bottom: 20px;
-            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        .heart-icon {
+            color: #e74c3c;
+            font-size: 4em;
+            margin-bottom: 15px;
+            animation: heartbeat 1.5s infinite;
         }
         
-        .final-message p {
-            font-size: 1.5em;
-            line-height: 1.6;
-            opacity: 0.9;
+        .love-message h2 {
+            color: #b21f1f;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+        }
+        
+        .love-message p {
+            color: #444;
+            font-size: 1.25em;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        
+        .hint {
+            font-weight: bold;
+            color: #ff416c;
+            margin-top: 25px;
+            font-size: 1.1em;
         }
 
-        /* Галерея Polaroid */
+        /* Галерея */
         .photo-gallery {
             position: fixed;
             top: 0;
@@ -114,7 +136,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 10;
+            z-index: 50;
         }
         
         .polaroid {
@@ -125,7 +147,7 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.4);
             border-radius: 3px;
             opacity: 0;
-            transform: scale(0.3) translateZ(-500px) rotate(var(--r));
+            transform: scale(0.3) rotate(var(--r));
             transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
@@ -144,42 +166,42 @@
             width: 100%;
             text-align: center;
             font-family: 'Brush Script MT', cursive;
-            font-size: 1.4em;
-            color: #444;
+            font-size: 1.5em;
+            color: #333;
         }
         
         .polaroid.visible {
             opacity: 1;
-            transform: scale(1) translateZ(0) rotate(var(--r));
+            transform: scale(1) rotate(var(--r));
         }
 
-        /* Позиции */
-        .ph1 { top: 5%; left: 3%; --r: -12deg; --caption: 'Наше море'; }
-        .ph2 { top: 8%; right: 4%; --r: 15deg; --caption: 'Наше путешествие'; }
-        .ph3 { bottom: 10%; left: 5%; --r: 8deg; --caption: 'Счастье быть рядом'; }
-        .ph4 { bottom: 12%; right: 6%; --r: -10deg; --caption: 'Моя прекрасная Снежана'; }
-        .ph5 { top: 40%; left: -2%; --r: -5deg; --caption: 'Твоя улыбка'; }
+        .ph1 { top: 5%; left: 3%; --r: -8deg; --caption: 'Наши моменты'; }
+        .ph2 { top: 10%; right: 4%; --r: 12deg; --caption: 'Счастье'; }
+        .ph3 { bottom: 8%; left: 5%; --r: 6deg; --caption: 'Любовь'; }
+        .ph4 { bottom: 10%; right: 6%; --r: -12deg; --caption: 'Вместе навсегда'; }
+        .ph5 { top: 40%; left: 2%; --r: -5deg; --caption: 'Снежана ❤️'; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
 
         @media (max-width: 900px) {
             .polaroid { width: 160px; }
             .polaroid img { height: 180px; }
+            button { width: 160px; font-size: 1.1em; }
         }
     </style>
 </head>
 <body>
     <div class="photo-gallery" id="gallery">
-        <div class="polaroid ph1"><img src="https://r2.perplexity.ai/file-upload/Hh6BvS1vS1vS1vS1/image.png"></div>
-        <div class="polaroid ph2"><img src="https://r2.perplexity.ai/file-upload/Yp9RzS1vS1vS1vS1/image.png"></div>
-        <div class="polaroid ph3"><img src="https://r2.perplexity.ai/file-upload/Kj2XmS1vS1vS1vS1/image.png"></div>
-        <div class="polaroid ph4"><img src="https://r2.perplexity.ai/file-upload/Mn5BvS1vS1vS1vS1/image.png"></div>
-        <div class="polaroid ph5"><img src="https://r2.perplexity.ai/file-upload/Op8RzS1vS1vS1vS1/image.png"></div>
+        <div class="polaroid ph1"><img src="1.jpg"></div>
+        <div class="polaroid ph2"><img src="2.jpg"></div>
+        <div class="polaroid ph3"><img src="3.jpg"></div>
+        <div class="polaroid ph4"><img src="4.jpg"></div>
+        <div class="polaroid ph5"><img src="5.jpg"></div>
     </div>
 
     <div class="container">
-        <h1>Для Снежаны ❤️</h1>
+        <h1>Моя дорогая Снежана ❤️</h1>
         
         <div class="question-box" id="qBox">
             <h2>Проведёшь ли ты со мной этот прекрасный день?</h2>
@@ -189,10 +211,15 @@
             </div>
         </div>
         
-        <div class="final-message" id="fMsg">
-            <h2>Я люблю тебя!</h2>
-            <p>Ты делаешь каждый мой день особенным.</p>
-            <p><strong>Пошевели мышкой по краям экрана...</strong></p>
+        <div class="love-message" id="loveMsg">
+            <div class="heart-icon">❤️</div>
+            <h2>Я так счастлив!</h2>
+            <p>Любимая, ты — самое прекрасное, что случилось в моей жизни.</p>
+            <p>Каждый день рядом с тобой наполнен любовью, радостью и смыслом.</p>
+            <p>Твоя улыбка освещает мой мир, а твои глаза — это целая вселенная, в которой я готов потеряться.</p>
+            <p>Спасибо тебе за то, что ты есть. Я люблю тебя больше, чем слова могут выразить.</p>
+            <p><strong>С любовью, навсегда твой ❤️</strong></p>
+            <p class="hint">Пошевели мышкой по краям экрана...</p>
         </div>
     </div>
 
@@ -200,29 +227,30 @@
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
         const qBox = document.getElementById('qBox');
-        const fMsg = document.getElementById('fMsg');
+        const loveMsg = document.getElementById('loveMsg');
         const photos = document.querySelectorAll('.polaroid');
         
+        // Убегающая кнопка
         noBtn.addEventListener('mouseover', () => {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+            noBtn.style.left = Math.random() * maxX + 'px';
+            noBtn.style.top = Math.random() * maxY + 'px';
         });
 
         yesBtn.addEventListener('click', () => {
             qBox.style.display = 'none';
-            fMsg.style.display = 'block';
+            loveMsg.style.display = 'block';
             document.body.style.background = 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)';
         });
 
         document.addEventListener('mousemove', (e) => {
-            if (fMsg.style.display === 'block') {
+            if (loveMsg.style.display === 'block') {
                 const x = e.clientX / window.innerWidth;
                 const y = e.clientY / window.innerHeight;
                 
-                // Проверяем, находится ли мышь у краев (30% от края)
-                if (x < 0.35 || x > 0.65 || y < 0.35 || y > 0.65) {
+                // Проявление фото у краев
+                if (x < 0.3 || x > 0.7 || y < 0.3 || y > 0.7) {
                     photos.forEach((p, i) => {
                         setTimeout(() => p.classList.add('visible'), i * 200);
                     });
