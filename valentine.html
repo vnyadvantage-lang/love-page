@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для Снежаны ❤️</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fff0f3 0%, #ffe0e8 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .heart-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+        
+        .heart-container:hover {
+            transform: scale(1.05);
+        }
+        
+        .heart {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ff4d6d;
+            transform: rotate(-45deg);
+            box-shadow: 0 20px 50px rgba(255, 77, 109, 0.4);
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #ff4d6d;
+            border-radius: 50%;
+        }
+        
+        .heart::before {
+            top: -50%;
+            left: 0;
+        }
+        
+        .heart::after {
+            left: 50%;
+            top: 0;
+        }
+        
+        .heart-photo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: rotate(-45deg) scale(1); }
+            50% { transform: rotate(-45deg) scale(1.05); }
+        }
+        
+        .floating-heart {
+            position: fixed;
+            font-size: 30px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+        
+        @keyframes float-up {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+        
+        .question {
+            position: absolute;
+            bottom: 50px;
+            width: 100%;
+            text-align: center;
+            font-size: 28px;
+            color: #ff4d6d;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .photo-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255, 240, 243, 0.95);
+            z-index: 200;
+        }
+        
+        .photo-grid.show {
+            display: grid;
+        }
+        
+        .photo-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.5s ease;
+        }
+        
+        .photo-grid.show .photo-item {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .confession-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            font-size: 22px;
+            color: #590d22;
+            line-height: 1.8;
+            z-index: 300;
+            display: none;
+        }
+        
+        .confession-text.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="heart-container" id="heartContainer">
+        <div class="heart"></div>
+        <img src="photo_2026-02-07_00-00-44.jpg" class="heart-photo" alt="Снежана">
+    </div>
+    
+    <div class="question" id="question">
+        Проведешь ли ты со мной сегодняшний день?
+    </div>
+    
+    <div class="photo-grid" id="photoGrid">
+        <div class="photo-item" style="transition-delay: 0.1s">
+            <img src="photo_2026-02-07_00-00-44.jpg" alt="Фото 1">
+        </div>
+        <div class="photo-item" style="transition-delay: 0.2s">
+            <img src="photo_2026-02-07_00-00-48.jpg" alt="Фото 2">
+        </div>
+        <div class="photo-item" style="transition-delay: 0.3s">
+            <img src="photo_2026-02-07_00-00-50.jpg" alt="Фото 3">
+        </div>
+        <div class="photo-item" style="transition-delay: 0.4s">
+            <img src="photo_2026-02-07_00-00-52.jpg" alt="Фото 4">
+        </div>
+        <div class="photo-item" style="transition-delay: 0.5s">
+            <img src="photo_2026-02-07_00-00-56.jpg" alt="Фото 5">
+        </div>
+        <div class="photo-item" style="transition-delay: 0.6s">
+            <img src="photo_2026-02-07_01-26-39.jpg" alt="Фото 6">
+        </div>
+        <div class="photo-item" style="transition-delay: 0.7s">
+            <img src="photo_2026-02-07_01-26-45.jpg" alt="Фото 7">
+        </div>
+        <div class="photo-item" style="transition-delay: 0.8s">
+            <img src="photo_2026-02-07_01-26-49.jpg" alt="Фото 8">
+        </div>
+    </div>
+    
+    <div class="confession-text" id="confession">
+        <p>❤️ Снежана, ты — самое прекрасное, что случалось в моей жизни. ❤️</p>
+        <p>Я безумно тебя люблю и хочу, чтобы каждый наш день был особенным. Спасибо тебе за твою нежность, доброту и за то, что ты рядом.</p>
+        <p>Пусть этот день станет еще одной яркой страничкой в нашей истории любви!</p>
+        <p>💕 С Днем Святого Валентина, моя любимая! 💕</p>
+    </div>
+
+    <script>
+        const heartContainer = document.getElementById('heartContainer');
+        const question = document.getElementById('question');
+        const photoGrid = document.getElementById('photoGrid');
+        const confession = document.getElementById('confession');
+        
+        // Создание летающих сердечек
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.textContent = '❤️';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animation = `float-up ${3 + Math.random() * 2}s linear`;
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 5000);
+        }
+        
+        // Постоянное появление сердечек
+        setInterval(createFloatingHeart, 300);
+        
+        // Клик по центральному сердцу
+        heartContainer.addEventListener('click', () => {
+            question.classList.add('hidden');
+            heartContainer.style.display = 'none';
+            
+            setTimeout(() => {
+                photoGrid.classList.add('show');
+            }, 300);
+            
+            setTimeout(() => {
+                confession.classList.add('show');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
