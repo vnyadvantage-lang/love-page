@@ -35,14 +35,17 @@
                     <i class="fas fa-trophy hover:text-yellow-500 cursor-pointer" onclick="toggleLeaderboard()"></i>
                     <i class="fas fa-volume-up hover:text-blue-500 cursor-pointer"></i>
                 </div>
+                
                 <div class="flex flex-col items-end">
                     <div class="text-xs text-gray-500 uppercase font-bold">Уровень <span id="level-display">1</span></div>
                     <div class="w-32 h-1.5 bg-gray-800 rounded-full mt-1 overflow-hidden">
                         <div id="level-progress" class="h-full bg-blue-500 transition-all duration-500" style="width: 0%"></div>
                     </div>
                 </div>
+                
                 <div class="xp-badge px-4 py-1.5 rounded-full font-bold text-sm flex items-center gap-2">
-                    <i class="fas fa-bolt"></i> <span id="xp-display">0</span> XP
+                    <i class="fas fa-bolt"></i>
+                    <span id="xp-display">0</span> XP
                 </div>
             </div>
         </header>
@@ -62,91 +65,50 @@
             </section>
 
             <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Skill cards injected here -->
+                <!-- Skills injected here -->
             </div>
         </div>
 
-        <!-- Skill Detail View -->
-        <div id="skill-view" class="max-w-5xl mx-auto p-4 md:p-8 hidden-view">
-            <div class="flex items-center gap-4 mb-8">
-                <button onclick="showDashboard()" class="text-gray-400 hover:text-white flex items-center gap-2">
-                    <i class="fas fa-arrow-left"></i> Назад
-                </button>
-                <div class="text-xs text-gray-500 uppercase font-bold" id="skill-nav-number">НАВЫК #1</div>
-                <div class="bg-green-500/10 text-green-500 text-[10px] px-2 py-0.5 rounded uppercase font-bold" id="skill-status-tag">Доступно</div>
-            </div>
+        <!-- Skill View -->
+        <div id="skill-view" class="max-w-7xl mx-auto p-4 md:p-8 hidden-view">
+            <button onclick="showDashboard()" class="text-gray-400 hover:text-white mb-8 flex items-center gap-2 transition-colors">
+                <i class="fas fa-arrow-left"></i> Назад к навыкам
+            </button>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Left Sidebar -->
-                <div class="lg:col-span-1 space-y-6">
-                    <div class="glass-card rounded-2xl p-6 bg-[#161b22]">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-                                <i class="fas fa-robot text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold">AI Тренер</h3>
-                                <p class="text-xs text-gray-500">Вводная лекция</p>
-                            </div>
-                        </div>
-                        <button class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg font-bold text-sm flex items-center justify-center gap-2">
-                            <i class="fas fa-play"></i> Слушать
-                        </button>
-                    </div>
-
-                    <div class="glass-card rounded-2xl p-6 border-l-4 border-blue-500">
-                        <h4 class="flex items-center gap-2 font-bold mb-4">
-                            <i class="fas fa-book-open text-blue-500"></i> Суть тренировки
-                        </h4>
-                        <p id="skill-description-detail" class="text-gray-400 text-sm leading-relaxed mb-6"></p>
-                        <div class="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
-                            <div class="text-blue-400 text-[10px] font-bold uppercase mb-1">Упражнение</div>
-                            <div class="text-sm font-medium" id="skill-exercise-name">Загрузка...</div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Left: Info & Form -->
+                <div class="space-y-8">
+                    <div id="skill-header">
+                        <h2 id="skill-title" class="text-3xl font-bold mb-4"></h2>
+                        <p id="skill-desc" class="text-gray-400 text-lg mb-6"></p>
+                        <div class="flex items-center gap-4">
+                            <span id="skill-time" class="bg-gray-800 text-gray-400 px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-2">
+                                <i class="far fa-clock"></i>
+                            </span>
+                            <span class="bg-blue-500/10 text-blue-400 px-3 py-1 rounded-lg text-xs font-bold">Отработка навыка</span>
                         </div>
                     </div>
 
-                    <div class="glass-card rounded-2xl p-6 bg-gradient-to-br from-indigo-900/20 to-purple-900/20 border-indigo-500/30">
-                        <div class="flex items-center justify-between mb-4">
-                            <h4 class="font-bold flex items-center gap-2">
-                                <i class="fas fa-gift text-yellow-500"></i> Награда
-                            </h4>
-                        </div>
-                        <p class="text-xs text-gray-400 mb-2">Выполни это задание, чтобы получить:</p>
-                        <div class="text-2xl font-black text-white">+100 XP <span class="text-yellow-500">✨</span></div>
-                    </div>
-                </div>
-
-                <!-- Main Content -->
-                <div class="lg:col-span-2 space-y-8">
-                    <div class="glass-card rounded-2xl p-8">
-                        <div class="flex items-center justify-between mb-8">
-                            <h2 class="text-xl font-bold flex items-center gap-4">
-                                <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-sm">1</span>
-                                Заполните вводные
-                            </h2>
-                            <button onclick="fillRandom()" class="text-purple-400 hover:text-purple-300 text-xs font-bold border border-purple-500/30 px-3 py-1.5 rounded-lg flex items-center gap-2">
-                                <i class="fas fa-magic"></i> Заполни за меня
-                            </button>
-                        </div>
-
+                    <div class="glass-card rounded-2xl p-8 space-y-6">
                         <div id="skill-inputs" class="space-y-6">
                             <!-- Inputs injected here -->
                         </div>
-
                         <button onclick="generatePrompt()" id="generate-btn" class="w-full bg-blue-600 hover:bg-blue-700 mt-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition-all">
                             <i class="fas fa-sync-alt"></i> Собрать Промпт
                         </button>
                     </div>
+                </div>
 
+                <!-- Right: Output & Result -->
+                <div class="space-y-8">
                     <!-- Prompt Output -->
                     <div id="prompt-output-section" class="glass-card rounded-2xl p-8 hidden">
                         <h2 class="text-xl font-bold flex items-center gap-4 mb-6">
-                            <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-sm">2</span>
-                            Готовый Промпт
+                            <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-sm">2</span> Готовый Промпт
                         </h2>
                         <div class="bg-black/40 p-6 rounded-xl border border-gray-800 relative group">
                             <pre id="prompt-content" class="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed font-mono"></pre>
-                            <button class="absolute top-4 right-4 text-gray-500 hover:text-white">
+                            <button onclick="copyPrompt()" class="absolute top-4 right-4 text-gray-500 hover:text-white">
                                 <i class="far fa-copy"></i>
                             </button>
                         </div>
@@ -176,7 +138,9 @@
             <div class="glass-card w-full max-w-md rounded-3xl overflow-hidden border-purple-500/30">
                 <div class="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 flex justify-between items-center">
                     <h3 class="text-xl font-black uppercase italic tracking-tighter">Лидерборд</h3>
-                    <button onclick="toggleLeaderboard()" class="text-white/60 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+                    <button onclick="toggleLeaderboard()" class="text-white/60 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
                 <div class="p-6 space-y-4 max-h-[60vh] overflow-y-auto" id="leaderboard-list">
                     <!-- Users injected here -->
@@ -190,161 +154,343 @@
 
     <script>
         const skills = {
-            1: { id: 1, title: 'Постановка задачи', slug: 'problem-framing', icon: 'fas fa-bullseye', color: 'blue', time: '10 мин', desc: 'Убираем расплывчатость. Формулируем задачу так, чтобы исключить недели обсуждений.', detail: 'Деньги сгорают не из-за «плохого ИИ», а из-за того, что мы ставим задачи «на тему», а не на результат.', exercise: 'Одна фраза, один критерий', inputs: [
-                { label: 'Цель (1 фраза)', placeholder: 'Хочу увеличить количество лидов...', type: 'input' },
-                { label: 'Метрика успеха', placeholder: '+20% к концу квартала', type: 'input' },
-                { label: 'Ограничение', placeholder: 'Бюджет 0 рублей', type: 'input' },
-                { label: 'Анти-цель', placeholder: 'Не снижаем качество ради количества', type: 'input' }
-            ]},
-            2: { id: 2, title: 'Архитектор контекста', slug: 'context-packaging', icon: 'fas fa-layer-group', color: 'purple', time: '15 мин', desc: 'Упаковываем вводные данные в компактный пакет для точного результата.', detail: 'Качество ответа ИИ зависит от полноты и компактности контекста. Представьте, что вы нанимаете консультанта за $5000/час.', exercise: 'Контекст-пакет на 12 строк', inputs: [
-                { label: 'Кто я / Роль', placeholder: 'Продакт-менеджер', type: 'input' },
-                { label: 'Продукт', placeholder: 'Курсы по дизайну', type: 'input' },
-                { label: 'Аудитория (ICP)', placeholder: 'Студенты', type: 'input' },
-                { label: 'Цель сейчас', placeholder: 'Запустить лендинг', type: 'input' },
-                { label: 'Что пробовали', placeholder: 'Таргет', type: 'input' },
-                { label: 'Ограничения', placeholder: 'Дедлайн 3 дня', type: 'input' },
-                { label: 'Стиль', placeholder: 'Дерзкий', type: 'input' },
-                { label: 'Формат ответа', placeholder: 'Структура страницы', type: 'input' }
-            ]},
-            3: { id: 3, title: 'Сбор вопросов', slug: 'socratic-questioning', icon: 'fas fa-question-circle', color: 'green', time: '20 мин', desc: 'Находим скрытые риски и неопределенность до траты бюджета.', detail: 'Провалы случаются из-за незаданных вовремя вопросов. ИИ поможет вытащить то, что вы упустили.', exercise: '15 вопросов -> 5 главных', inputs: [
-                { label: 'Ситуация / Решение', placeholder: 'Хотим выходить на рынок Латам...', type: 'textarea' }
-            ]},
-            4: { id: 4, title: 'Декомпозиция (WBS)', slug: 'decomposition', icon: 'fas fa-project-diagram', color: 'blue', time: '20 мин', desc: 'Превращаем «идею» в дерево конкретных работ с зависимостями.', detail: 'Цель без плана — это мечта. Декомпозиция показывает блоки.', exercise: 'WBS без фантазий', inputs: [
-                { label: 'Цель', placeholder: 'Запустить подкаст за месяц', type: 'input' }
-            ]},
-            5: { id: 5, title: 'Редакторский отбор', slug: 'editorial-selection', icon: 'fas fa-pen-nib', color: 'red', time: '15 мин', desc: 'Выбираем одну сильную формулировку из множества вариантов.', detail: 'Выигрывает тот, кто быстро выбирает лучшее и дожимает.', exercise: '3 гипотезы -> 1 победитель', inputs: [
-                { label: 'Что пишем?', placeholder: 'Заголовок рассылки', type: 'input' },
-                { label: 'Контекст', placeholder: 'Продаем аутсорс банкам', type: 'input' }
-            ]},
-            6: { id: 6, title: 'Спор стратегий', slug: 'deliberation', icon: 'fas fa-balance-scale', color: 'orange', time: '25 мин', desc: 'Сталкиваем стратегии, чтобы понять цену жертвы.', detail: 'Любое решение — это обмен. Если конфликт не проговорить, вы заплатите позже.', exercise: 'Два стула', inputs: [
-                { label: 'Позиция А', placeholder: 'Быстро и дешево', type: 'input' },
-                { label: 'Позиция Б', placeholder: 'Качественно и долго', type: 'input' },
-                { label: 'Контекст', placeholder: 'Стартап, мало денег', type: 'input' }
-            ]},
-            7: { id: 7, title: 'Верификация', slug: 'falsification', icon: 'fas fa-search-minus', color: 'red', time: '20 мин', desc: 'Ищем способ БЫСТРО убить идею, чтобы не тратить месяцы.', detail: 'Самые дорогие ошибки — это идеи, которые долго не убивали.', exercise: 'Тест на фальсификацию', inputs: [
-                { label: 'Гипотеза', placeholder: 'Люди купят подписку за 500р', type: 'input' }
-            ]},
-            8: { id: 8, title: 'Структурирование', slug: 'transformation', icon: 'fas fa-table', color: 'cyan', time: '20 мин', desc: 'Превращаем хаос заметок в управленческие таблицы.', detail: 'Система побеждает хаос.', exercise: 'Свалка -> Таблица действий', inputs: [
-                { label: 'Текст (хаос)', placeholder: 'Текст встречи...', type: 'textarea' }
-            ]},
-            9: { id: 9, title: 'Перенос стиля', slug: 'tone-of-voice', icon: 'fas fa-feather-alt', color: 'yellow', time: '15 мин', desc: 'Учим ИИ писать вашим голосом.', detail: 'Тексты «от бота» убивают доверие. Научим ИИ мимикрировать.', exercise: 'Стиль-слепок', inputs: [
-                { label: 'Пример стиля', placeholder: 'Ваш лучший пост...', type: 'textarea' },
-                { label: 'Тема нового текста', placeholder: 'Как отдыхать', type: 'input' }
-            ]},
-            10: { id: 10, title: 'Промпт-дебаг', slug: 'debug', icon: 'fas fa-sync', color: 'gray', time: '25 мин', desc: 'Исправляем плохие ответы итерациями.', detail: 'Первый ответ всегда плохой. Мастерство в том, как вы правите.', exercise: 'Работа над ошибками', inputs: [
-                { label: 'Исходный промпт', placeholder: 'Напиши статью про...', type: 'textarea' },
-                { label: 'Что не нравится', placeholder: 'Слишком формально', type: 'input' }
-            ]}
+            1: {
+                id: 1,
+                title: 'Постановка задачи',
+                slug: 'problem-framing',
+                icon: 'fas fa-bullseye',
+                color: 'blue',
+                time: '10 мин',
+                desc: 'Убираем расплывчатость. Формулируем задачу так, чтобы исключить недели обсуждений.',
+                detail: 'Деньги сгорают не из-за «плохого ИИ», а из-за того, что мы ставим задачи «на тему», а не на результат.',
+                exercise: 'Одна фраза, один критерий',
+                inputs: [
+                    { label: 'Цель (1 фраза)', placeholder: 'Хочу увеличить количество лидов...', type: 'input' },
+                    { label: 'Метрика успеха', placeholder: '+20% к концу квартала', type: 'input' },
+                    { label: 'Ограничение', placeholder: 'Бюджет 0 рублей', type: 'input' },
+                    { label: 'Анти-цель', placeholder: 'Не снижаем качество ради количества', type: 'input' }
+                ]
+            },
+            2: {
+                id: 2,
+                title: 'Архитектор контекста',
+                slug: 'context-packaging',
+                icon: 'fas fa-layer-group',
+                color: 'purple',
+                time: '15 мин',
+                desc: 'Упаковываем вводные данные в компактный пакет для точного результата.',
+                detail: 'Качество ответа ИИ зависит от полноты и компактности контекста.',
+                exercise: 'Контекст-пакет на 12 строк',
+                inputs: [
+                    { label: 'Кто я / Роль', placeholder: 'Продакт-менеджер', type: 'input' },
+                    { label: 'Продукт', placeholder: 'Курсы по дизайну', type: 'input' },
+                    { label: 'Аудитория (ICP)', placeholder: 'Студенты', type: 'input' },
+                    { label: 'Цель сейчас', placeholder: 'Запустить лендинг', type: 'input' },
+                    { label: 'Что пробовали', placeholder: 'Таргет', type: 'input' },
+                    { label: 'Ограничения', placeholder: 'Дедлайн 3 дня', type: 'input' },
+                    { label: 'Стиль', placeholder: 'Дерзкий', type: 'input' },
+                    { label: 'Формат ответа', placeholder: 'Структура страницы', type: 'input' }
+                ]
+            },
+            3: {
+                id: 3,
+                title: 'Сбор вопросов',
+                slug: 'socratic-questioning',
+                icon: 'fas fa-question-circle',
+                color: 'green',
+                time: '20 мин',
+                desc: 'Находим скрытые риски и неопределенность до траты бюджета.',
+                detail: 'Провалы случаются из-за незаданных вовремя вопросов. ИИ поможет вытащить то, что вы упустили.',
+                exercise: '15 вопросов -> 5 главных',
+                inputs: [
+                    { label: 'Ситуация / Решение', placeholder: 'Хотим выходить на рынок Латам...', type: 'textarea' }
+                ]
+            },
+            4: {
+                id: 4,
+                title: 'Декомпозиция (WBS)',
+                slug: 'decomposition',
+                icon: 'fas fa-project-diagram',
+                color: 'blue',
+                time: '20 мин',
+                desc: 'Превращаем «идею» в дерево конкретных работ с зависимостями.',
+                detail: 'Цель без плана — это мечта. Декомпозиция показывает блоки.',
+                exercise: 'WBS без фантазий',
+                inputs: [
+                    { label: 'Цель', placeholder: 'Запустить подкаст за месяц', type: 'input' }
+                ]
+            },
+            5: {
+                id: 5,
+                title: 'Редакторский отбор',
+                slug: 'editorial-selection',
+                icon: 'fas fa-pen-nib',
+                color: 'red',
+                time: '15 мин',
+                desc: 'Выбираем одну сильную формулировку из множества вариантов.',
+                detail: 'Выигрывает тот, кто быстро выбирает лучшее и дожимает.',
+                exercise: '3 гипотезы -> 1 победитель',
+                inputs: [
+                    { label: 'Что пишем?', placeholder: 'Заголовок рассылки', type: 'input' },
+                    { label: 'Контекст', placeholder: 'Продаем аутсорс банкам', type: 'input' }
+                ]
+            },
+            6: {
+                id: 6,
+                title: 'Спор стратегий',
+                slug: 'deliberation',
+                icon: 'fas fa-balance-scale',
+                color: 'orange',
+                time: '25 мин',
+                desc: 'Сталкиваем стратегии, чтобы понять цену жертвы.',
+                detail: 'Любое решение — это обмен. Если конфликт не проговорить, вы заплатите позже.',
+                exercise: 'Два стула',
+                inputs: [
+                    { label: 'Позиция А', placeholder: 'Быстро и дешево', type: 'input' },
+                    { label: 'Позиция Б', placeholder: 'Качественно и долго', type: 'input' }
+                ]
+            },
+            7: {
+                id: 7,
+                title: 'Few-Shot (Примеры)',
+                slug: 'few-shot',
+                icon: 'fas fa-graduation-cap',
+                color: 'indigo',
+                time: '15 мин',
+                desc: 'Обучаем ИИ на конкретных образцах, чтобы он понял «ваш» стиль.',
+                detail: 'ИИ лучше всего учится на примерах. Дайте ему 3 хороших примера, и он повторит успех.',
+                exercise: '3 образца -> 1 шаблон',
+                inputs: [
+                    { label: 'Пример 1 (Идеал)', placeholder: 'Текст примера...', type: 'textarea' },
+                    { label: 'Новая задача', placeholder: 'Сделай так же для...', type: 'textarea' }
+                ]
+            },
+            8: {
+                id: 8,
+                title: 'Chain-of-Thought',
+                slug: 'cot',
+                icon: 'fas fa-brain',
+                color: 'teal',
+                time: '20 мин',
+                desc: 'Заставляем ИИ думать по шагам, исключая логические ошибки.',
+                detail: 'Когда мы просим «сразу результат», ИИ часто ошибается. Пошаговое мышление повышает точность в разы.',
+                exercise: 'Разбор по косточкам',
+                inputs: [
+                    { label: 'Сложная задача', placeholder: 'Рассчитать воронку или логику...', type: 'textarea' }
+                ]
+            },
+            9: {
+                id: 9,
+                title: 'Переменные',
+                slug: 'variables',
+                icon: 'fas fa-code',
+                color: 'yellow',
+                time: '15 мин',
+                desc: 'Превращаем промпт в универсальный шаблон для массовой работы.',
+                detail: 'Хардкод — зло. Переменные позволяют использовать один и тот же крутой промпт для разных задач.',
+                exercise: 'Шаблонизатор',
+                inputs: [
+                    { label: 'Текст промпта', placeholder: 'Используйте {{variable}}...', type: 'textarea' },
+                    { label: 'Значение переменных', placeholder: 'variable = значение...', type: 'textarea' }
+                ]
+            },
+            10: {
+                id: 10,
+                title: 'Самокритика',
+                slug: 'reflection',
+                icon: 'fas fa-search',
+                color: 'pink',
+                time: '15 мин',
+                desc: 'ИИ проверяет сам себя на соответствие критериям до выдачи финала.',
+                detail: 'Лучший цензор для ИИ — он сам. Заставьте его найти ошибки в своем же ответе.',
+                exercise: 'Двойная проверка',
+                inputs: [
+                    { label: 'Критерии качества', placeholder: 'Список чек-листа...', type: 'textarea' },
+                    { label: 'Черновик', placeholder: 'Текст для проверки...', type: 'textarea' }
+                ]
+            }
         };
 
-        let state = { xp: 0, level: 1, completed: [], view: 'dashboard', activeSkill: null };
-        const saved = localStorage.getItem('portraithy_gym_state');
-        if (saved) state = JSON.parse(saved);
+        let state = {
+            xp: 0,
+            level: 1,
+            completedSkills: [],
+            currentSkill: null
+        };
 
-        function save() { localStorage.setItem('portraithy_gym_state', JSON.stringify(state)); updateHeader(); }
+        const leaderboardData = [
+            { name: "Александр В.", xp: 12450, level: 12, img: "https://i.pravatar.cc/150?u=1" },
+            { name: "Марина К.", xp: 11200, level: 11, img: "https://i.pravatar.cc/150?u=2" },
+            { name: "Дмитрий С.", xp: 9800, level: 9, img: "https://i.pravatar.cc/150?u=3" },
+            { name: "Снежана Л.", xp: 8500, level: 8, img: "https://i.pravatar.cc/150?u=4" },
+            { name: "Иван П.", xp: 7200, level: 7, img: "https://i.pravatar.cc/150?u=5" }
+        ];
 
-        function updateHeader() {
-            document.getElementById('xp-display').textContent = state.xp;
-            document.getElementById('level-display').textContent = Math.floor(state.xp / 1000) + 1;
-            document.getElementById('level-progress').style.width = (state.xp % 1000) / 10 + '%';
-            document.getElementById('overall-progress').textContent = Math.round((state.completed.length / 10) * 100) + '%';
+        function init() {
+            const saved = localStorage.getItem('ai_gym_state');
+            if (saved) {
+                state = JSON.parse(saved);
+                updateUI();
+            }
+            renderSkills();
+        }
+
+        function renderSkills() {
+            const grid = document.getElementById('skills-grid');
+            grid.innerHTML = Object.values(skills).map(skill => `
+                <div class="glass-card skill-card rounded-3xl p-6 cursor-pointer transition-all duration-300 ${state.completedSkills.includes(skill.id) ? 'opacity-90' : ''}" onclick="showSkill(${skill.id})">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 rounded-2xl bg-${skill.color}-500/20 flex items-center justify-center text-${skill.color}-500 text-xl">
+                            <i class="${skill.icon}"></i>
+                        </div>
+                        ${state.completedSkills.includes(skill.id) ? '<i class="fas fa-check-circle text-green-500 text-xl"></i>' : '<span class="text-gray-600 text-[10px] font-bold uppercase tracking-widest">' + skill.time + '</span>'}
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">${skill.title}</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">${skill.desc}</p>
+                </div>
+            `).join('');
+            
+            const progress = (state.completedSkills.length / Object.keys(skills).length) * 100;
+            document.getElementById('overall-progress').innerText = Math.round(progress) + '%';
+        }
+
+        function showSkill(id) {
+            state.currentSkill = skills[id];
+            document.getElementById('dashboard-view').classList.add('hidden-view');
+            document.getElementById('skill-view').classList.remove('hidden-view');
+            
+            document.getElementById('skill-title').innerText = state.currentSkill.title;
+            document.getElementById('skill-desc').innerText = state.currentSkill.desc;
+            document.getElementById('skill-time').innerHTML = `<i class="far fa-clock"></i> ${state.currentSkill.time}`;
+            
+            const container = document.getElementById('skill-inputs');
+            container.innerHTML = state.currentSkill.inputs.map((input, idx) => `
+                <div>
+                    <label class="block text-gray-500 text-xs font-bold uppercase tracking-widest mb-2">${input.label}</label>
+                    ${input.type === 'textarea' ? 
+                        `<textarea id="input-${idx}" class="w-full p-4 rounded-xl resize-none h-32" placeholder="${input.placeholder}"></textarea>` : 
+                        `<input id="input-${idx}" type="text" class="w-full p-4 rounded-xl" placeholder="${input.placeholder}">`
+                    }
+                </div>
+            `).join('');
+            
+            document.getElementById('prompt-output-section').classList.add('hidden');
+            document.getElementById('gemini-analysis-section').classList.add('hidden');
+            window.scrollTo(0, 0);
         }
 
         function showDashboard() {
             document.getElementById('dashboard-view').classList.remove('hidden-view');
             document.getElementById('skill-view').classList.add('hidden-view');
-            renderCards();
+            renderSkills();
         }
-
-        function renderCards() {
-            const grid = document.getElementById('skills-grid');
-            grid.innerHTML = '';
-            Object.values(skills).forEach(s => {
-                const isDone = state.completed.includes(s.slug);
-                const card = document.createElement('div');
-                card.className = `glass-card skill-card rounded-2xl p-6 relative cursor-pointer ${isDone ? 'border-green-500/50' : ''}`;
-                card.onclick = () => openSkill(s.id);
-                card.innerHTML = `
-                    ${isDone ? '<div class="absolute top-4 right-4 text-green-500"><i class="fas fa-check-circle text-xl"></i></div>' : ''}
-                    <div class="w-12 h-12 bg-${s.color}-900/30 rounded-xl flex items-center justify-center mb-6 border border-${s.color}-500/30">
-                        <i class="${s.icon} text-${s.color}-400 text-xl"></i>
-                    </div>
-                    <div class="text-xs text-gray-500 font-bold mb-1 uppercase tracking-wider">Навык ${s.id}</div>
-                    <h3 class="text-xl font-bold mb-1">${s.title}</h3>
-                    <p class="text-gray-500 text-[10px] mb-4 font-mono uppercase">${s.slug.replace('-', ' ')}</p>
-                    <p class="text-gray-400 text-sm mb-8 leading-relaxed line-clamp-2">${s.desc}</p>
-                    <div class="flex items-center justify-between mt-auto">
-                        <div class="flex items-center gap-2 text-gray-500 text-xs font-medium">
-                            <i class="far fa-clock"></i> ${s.time}
-                        </div>
-                        <span class="text-emerald-400 font-bold text-xs hover:underline flex items-center gap-2">
-                            ${isDone ? 'Повторить' : 'Начать'} <i class="fas fa-chevron-right text-[10px]"></i>
-                        </span>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function openSkill(id) {
-            const s = skills[id];
-            state.activeSkill = s;
-            document.getElementById('dashboard-view').classList.add('hidden-view');
-            document.getElementById('skill-view').classList.remove('hidden-view');
-            document.getElementById('skill-nav-number').textContent = `НАВЫК #${s.id}`;
-            document.getElementById('skill-description-detail').textContent = s.detail;
-            document.getElementById('skill-exercise-name').textContent = s.exercise;
-            document.getElementById('skill-status-tag').textContent = state.completed.includes(s.slug) ? 'Сделано' : 'Доступно';
-            const inputContainer = document.getElementById('skill-inputs');
-            inputContainer.innerHTML = '';
-            s.inputs.forEach((inp, idx) => {
-                const div = document.createElement('div');
-                div.innerHTML = `<label class="block text-gray-400 text-xs font-bold mb-2 uppercase">${inp.label}</label>` + 
-                    (inp.type === 'input' ? `<input type="text" id="inp-${idx}" placeholder="${inp.placeholder}" class="w-full p-3 rounded-xl">` : `<textarea id="inp-${idx}" rows="4" placeholder="${inp.placeholder}" class="w-full p-3 rounded-xl"></textarea>`);
-                inputContainer.appendChild(div);
-            });
-            document.getElementById('prompt-output-section').classList.add('hidden');
-            document.getElementById('gemini-analysis-section').classList.add('hidden');
-            window.scrollTo(0,0);
-        }
-
-        function fillRandom() { state.activeSkill.inputs.forEach((inp, idx) => { document.getElementById(`inp-${idx}`).value = inp.placeholder; }); }
 
         function generatePrompt() {
             const btn = document.getElementById('generate-btn');
             btn.innerHTML = '<div class="loader"></div> Сборка...';
+            btn.disabled = true;
+
             setTimeout(() => {
-                const s = state.activeSkill;
-                const vals = s.inputs.map((_, i) => document.getElementById(`inp-${i}`).value);
-                document.getElementById('prompt-content').textContent = `[System: ${s.title}] ${vals.join(' | ')}`;
+                let prompt = `--- ${state.currentSkill.title} ---\n\n`;
+                state.currentSkill.inputs.forEach((input, idx) => {
+                    const val = document.getElementById(`input-${idx}`).value || input.placeholder;
+                    prompt += `[${input.label.toUpperCase()}]: ${val}\n`;
+                });
+                
+                document.getElementById('prompt-content').innerText = prompt;
                 document.getElementById('prompt-output-section').classList.remove('hidden');
-                btn.innerHTML = '<i class="fas fa-sync-alt"></i> Обновить Промпт';
+                
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> Пересобрать';
+                btn.disabled = false;
+                
+                const outputSection = document.getElementById('prompt-output-section');
+                outputSection.scrollIntoView({ behavior: 'smooth' });
             }, 800);
         }
 
         function runGemini() {
             const btn = document.getElementById('run-gemini-btn');
-            const analysisSec = document.getElementById('gemini-analysis-section');
-            const analysisContent = document.getElementById('analysis-content');
-            btn.disabled = true;
+            const analysisSection = document.getElementById('gemini-analysis-section');
+            const content = document.getElementById('analysis-content');
+            
             btn.innerHTML = '<div class="loader"></div> Gemini думает...';
-            analysisSec.classList.remove('hidden');
+            btn.disabled = true;
+            
+            analysisSection.classList.remove('hidden');
+            content.innerHTML = '<div class="animate-pulse space-y-4"><div class="h-4 bg-gray-800 rounded w-3/4"></div><div class="h-4 bg-gray-800 rounded"></div><div class="h-4 bg-gray-800 rounded w-5/6"></div></div>';
+            
             setTimeout(() => {
-                analysisContent.innerHTML = `<h4 class="text-white font-bold mb-4">Анализ завершен:</h4><p>Ваш подход к навыку <strong>${state.activeSkill.title}</strong> оценен на отлично. Получено +250 XP за качественную проработку.</p>`;
+                content.innerHTML = `
+                    <p>Анализ промпта завершен успешно.</p>
+                    <p class="mt-4"><strong>Сильные стороны:</strong> Четко задан контекст и роль. Использованы конкретные метрики успеха.</p>
+                    <p class="mt-2"><strong>Рекомендация:</strong> Попробуйте добавить больше ограничений по формату ответа, чтобы ИИ не «лил воду».</p>
+                    <div class="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                        <p class="text-blue-400 text-sm"><strong>Результат:</strong> Ваша стратегия декомпозиции проекта выглядит жизнеспособной. Навык отработан на 95%.</p>
+                    </div>
+                `;
                 btn.innerHTML = '<i class="fas fa-check"></i> Готово';
-                if (!state.completed.includes(state.activeSkill.slug)) { state.completed.push(state.activeSkill.slug); state.xp += 250; save(); }
+                
+                if (!state.completedSkills.includes(state.currentSkill.id)) {
+                    state.completedSkills.push(state.currentSkill.id);
+                    updateProgress(150);
+                }
+                
+                analysisSection.scrollIntoView({ behavior: 'smooth' });
             }, 2000);
         }
 
-        function toggleLeaderboard() { document.getElementById('leaderboard-modal').classList.toggle('hidden'); if (!document.getElementById('leaderboard-modal').classList.contains('hidden')) renderLeaderboard(); }
-
-        function renderLeaderboard() {
-            const list = document.getElementById('leaderboard-list');
-            const users = [{ name: 'Stas Shevchuk', xp: 2320 }, { name: 'Andrey Bryn', xp: 2170 }, { name: 'Вы (Guest)', xp: state.xp, self: true }].sort((a,b) => b.xp - a.xp);
-            list.innerHTML = users.map((u, i) => `<div class="flex items-center justify-between p-3 rounded-xl ${u.self ? 'bg-blue-600/20' : 'bg-white/5'}"><span>${i+1}. ${u.name}</span><span>${u.xp} XP</span></div>`).join('');
+        function updateProgress(xpGain) {
+            state.xp += xpGain;
+            if (state.xp >= state.level * 1000) {
+                state.level++;
+                alert(`Поздравляем! Вы достигли уровня ${state.level}!`);
+            }
+            updateUI();
+            saveData();
         }
 
-        updateHeader(); showDashboard();
+        function updateUI() {
+            document.getElementById('xp-display').innerText = state.xp;
+            document.getElementById('level-display').innerText = state.level;
+            const progress = ((state.xp % 1000) / 1000) * 100;
+            document.getElementById('level-progress').style.width = progress + '%';
+        }
+
+        function saveData() {
+            localStorage.setItem('ai_gym_state', JSON.stringify(state));
+        }
+
+        function toggleLeaderboard() {
+            const modal = document.getElementById('leaderboard-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                const list = document.getElementById('leaderboard-list');
+                list.innerHTML = leaderboardData.map((u, i) => `
+                    <div class="flex items-center justify-between group">
+                        <div class="flex items-center gap-4">
+                            <div class="text-gray-500 font-bold w-4">${i + 1}</div>
+                            <img src="${u.img}" class="w-10 h-10 rounded-full border border-gray-800">
+                            <div>
+                                <div class="font-bold text-sm">${u.name}</div>
+                                <div class="text-[10px] text-gray-500 uppercase tracking-widest">Уровень ${u.level}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-blue-400 font-black text-sm">${u.xp.toLocaleString()}</div>
+                            <div class="text-[8px] text-gray-600 uppercase">XP</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function copyPrompt() {
+            const text = document.getElementById('prompt-content').innerText;
+            navigator.clipboard.writeText(text);
+            alert('Промпт скопирован!');
+        }
+
+        init();
     </script>
 </body>
 </html>
