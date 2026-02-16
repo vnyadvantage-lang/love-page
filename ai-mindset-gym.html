@@ -3,231 +3,436 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Mindset Gym - Тренажер нового AI мышления</title>
+    <title>AI Mindset Gym - Полноценный Тренажер</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0c10;
-            color: #ffffff;
-        }
-
-        .glass-card {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .skill-card:hover {
-            border-color: #10b981;
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2);
-        }
-
-        .gradient-text {
-            background: linear-gradient(90deg, #10b981, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .progress-circle {
-            position: relative;
-            width: 120px;
-            height: 120px;
-        }
-
-        .xp-badge {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0a0c10; color: #ffffff; }
+        .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .skill-card:hover { border-color: #10b981; transform: translateY(-4px); box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2); }
+        .xp-badge { background: linear-gradient(135deg, #6366f1, #a855f7); }
+        .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .hidden-view { display: none; }
+        input, textarea { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
+        input:focus, textarea:focus { border-color: #3b82f6 !important; outline: none; }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-8">
-    <!-- Header -->
-    <header class="max-w-7xl mx-auto flex flex-wrap items-center justify-between mb-12 gap-4">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <i class="fas fa-brain text-white"></i>
+<body class="min-h-screen">
+    <div id="app">
+        <!-- Header -->
+        <header class="max-w-7xl mx-auto p-4 md:p-8 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showDashboard()">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-brain text-white"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight">AI Mindset Gym</span>
             </div>
-            <span class="text-xl font-bold tracking-tight">AI Mindset Gym</span>
-        </div>
-        
-        <div class="flex items-center gap-6">
-            <div class="flex items-center gap-2">
-                <i class="fas fa-leaf text-green-500"></i>
-                <i class="fas fa-trophy text-yellow-500"></i>
-                <i class="fas fa-volume-up text-gray-400"></i>
-                <i class="fas fa-moon text-gray-400"></i>
-            </div>
-            <div class="flex flex-col items-end">
-                <div class="text-xs text-gray-400 uppercase tracking-widest">Уровень 6</div>
-                <div class="w-32 h-2 bg-gray-800 rounded-full mt-1 overflow-hidden">
-                    <div class="w-3/4 h-full bg-blue-500"></div>
+            
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-3 text-gray-400">
+                    <i class="fas fa-leaf hover:text-green-500 cursor-pointer"></i>
+                    <i class="fas fa-trophy hover:text-yellow-500 cursor-pointer" onclick="toggleLeaderboard()"></i>
+                    <i class="fas fa-volume-up hover:text-blue-500 cursor-pointer"></i>
+                </div>
+                <div class="flex flex-col items-end">
+                    <div class="text-xs text-gray-500 uppercase font-bold">Уровень <span id="level-display">1</span></div>
+                    <div class="w-32 h-1.5 bg-gray-800 rounded-full mt-1 overflow-hidden">
+                        <div id="level-progress" class="h-full bg-blue-500 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="xp-badge px-4 py-1.5 rounded-full font-bold text-sm flex items-center gap-2">
+                    <i class="fas fa-bolt"></i> <span id="xp-display">0</span> XP
                 </div>
             </div>
-            <div class="xp-badge px-4 py-1.5 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg shadow-purple-500/20">
-                <i class="fas fa-bolt"></i> 1500 XP
-            </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- Hero Section -->
-    <section class="max-w-5xl mx-auto glass-card rounded-3xl p-8 md:p-12 mb-12 flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
-        <div class="relative z-10 max-w-xl">
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-4">AI Mindset Gym</h1>
-            <p class="text-blue-400 font-semibold tracking-wider text-sm mb-6 uppercase">Тренажер нового AI мышления</p>
-            <p class="text-gray-400 text-lg leading-relaxed">
-                Практическая система выработки навыков взаимодействия с искусственным интеллектом. Превращаем хаос в результат.
-            </p>
-        </div>
-        
-        <div class="flex flex-col items-center gap-4 mt-8 md:mt-0">
-            <div class="text-gray-400 text-sm">Ваш прогресс</div>
-            <div class="text-6xl font-black text-blue-500">100%</div>
-            <div class="text-gray-400 text-sm">курса пройдено</div>
-        </div>
-    </section>
-
-    <!-- Skills Grid -->
-    <main class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Skill 1 -->
-        <div class="glass-card skill-card rounded-2xl p-6 relative">
-            <div class="absolute top-4 right-4 text-green-500">
-                <i class="fas fa-check-circle text-xl"></i>
-            </div>
-            <div class="w-12 h-12 bg-blue-900/30 rounded-xl flex items-center justify-center mb-6 border border-blue-500/30">
-                <i class="fas fa-bullseye text-blue-400"></i>
-            </div>
-            <div class="text-xs text-gray-500 font-bold mb-1">НАВЫК 1</div>
-            <h3 class="text-xl font-bold mb-2">Постановка задачи</h3>
-            <p class="text-gray-500 text-xs mb-4">Problem Framing</p>
-            <p class="text-gray-400 text-sm mb-8 leading-relaxed">Убираем расплывчатость. Формулируем задачу так, чтобы исключить недели обсуждений.</p>
-            <div class="flex items-center justify-between mt-auto">
-                <div class="flex items-center gap-2 text-gray-500 text-xs">
-                    <i class="far fa-clock"></i> 10 мин
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="max-w-7xl mx-auto p-4 md:p-8">
+            <section class="max-w-5xl mx-auto glass-card rounded-3xl p-8 md:p-12 mb-12 flex flex-col md:row justify-between items-center relative overflow-hidden">
+                <div class="relative z-10">
+                    <h1 class="text-4xl md:text-5xl font-extrabold mb-4">AI Mindset Gym</h1>
+                    <p class="text-blue-400 font-semibold tracking-wider text-sm mb-6 uppercase">Тренажер нового AI мышления</p>
+                    <p class="text-gray-400 text-lg">Система выработки навыков взаимодействия с искусственным интеллектом.</p>
                 </div>
-                <button class="text-emerald-400 font-bold text-sm hover:underline flex items-center gap-2">
-                    Повторить <i class="fas fa-chevron-right text-xs"></i>
+                <div class="flex flex-col items-center gap-2 mt-8 md:mt-0">
+                    <div class="text-gray-500 text-sm">Ваш прогресс</div>
+                    <div class="text-6xl font-black text-blue-500" id="overall-progress">0%</div>
+                </div>
+            </section>
+
+            <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Skill cards injected here -->
+            </div>
+        </div>
+
+        <!-- Skill Detail View -->
+        <div id="skill-view" class="max-w-5xl mx-auto p-4 md:p-8 hidden-view">
+            <div class="flex items-center gap-4 mb-8">
+                <button onclick="showDashboard()" class="text-gray-400 hover:text-white flex items-center gap-2">
+                    <i class="fas fa-arrow-left"></i> Назад
                 </button>
+                <div class="text-xs text-gray-500 uppercase font-bold" id="skill-nav-number">НАВЫК #1</div>
+                <div class="bg-green-500/10 text-green-500 text-[10px] px-2 py-0.5 rounded uppercase font-bold" id="skill-status-tag">Доступно</div>
             </div>
-        </div>
 
-        <!-- Skill 2 -->
-        <div class="glass-card skill-card rounded-2xl p-6 relative border-emerald-500/50">
-            <div class="absolute top-4 right-4 text-green-500">
-                <i class="fas fa-check-circle text-xl"></i>
-            </div>
-            <div class="w-12 h-12 bg-purple-900/30 rounded-xl flex items-center justify-center mb-6 border border-purple-500/30">
-                <i class="fas fa-layer-group text-purple-400"></i>
-            </div>
-            <div class="text-xs text-gray-500 font-bold mb-1">НАВЫК 2</div>
-            <h3 class="text-xl font-bold mb-2">Архитектор контекста</h3>
-            <p class="text-gray-500 text-xs mb-4">Context Packaging</p>
-            <p class="text-gray-400 text-sm mb-8 leading-relaxed">Упаковываем вводные данные в компактный пакет для точного результата.</p>
-            <div class="flex items-center justify-between mt-auto">
-                <div class="flex items-center gap-2 text-gray-500 text-xs">
-                    <i class="far fa-clock"></i> 15 мин
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Sidebar -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="glass-card rounded-2xl p-6 bg-[#161b22]">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-robot text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold">AI Тренер</h3>
+                                <p class="text-xs text-gray-500">Вводная лекция</p>
+                            </div>
+                        </div>
+                        <button class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg font-bold text-sm flex items-center justify-center gap-2">
+                            <i class="fas fa-play"></i> Слушать
+                        </button>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 border-l-4 border-blue-500">
+                        <h4 class="flex items-center gap-2 font-bold mb-4">
+                            <i class="fas fa-book-open text-blue-500"></i> Суть тренировки
+                        </h4>
+                        <p id="skill-description-detail" class="text-gray-400 text-sm leading-relaxed mb-6"></p>
+                        <div class="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
+                            <div class="text-blue-400 text-[10px] font-bold uppercase mb-1">Упражнение</div>
+                            <div class="text-sm font-medium" id="skill-exercise-name">Загрузка...</div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 bg-gradient-to-br from-indigo-900/20 to-purple-900/20 border-indigo-500/30">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-bold flex items-center gap-2">
+                                <i class="fas fa-gift text-yellow-500"></i> Награда
+                            </h4>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">Выполни это задание, чтобы получить:</p>
+                        <div class="text-2xl font-black text-white">+100 XP <span class="text-yellow-500">✨</span></div>
+                    </div>
                 </div>
-                <button class="text-emerald-400 font-bold text-sm hover:underline flex items-center gap-2">
-                    Повторить <i class="fas fa-chevron-right text-xs"></i>
-                </button>
-            </div>
-        </div>
 
-        <!-- Skill 3 -->
-        <div class="glass-card skill-card rounded-2xl p-6 relative">
-            <div class="absolute top-4 right-4 text-green-500">
-                <i class="fas fa-check-circle text-xl"></i>
-            </div>
-            <div class="w-12 h-12 bg-green-900/30 rounded-xl flex items-center justify-center mb-6 border border-green-500/30">
-                <i class="fas fa-question-circle text-green-400"></i>
-            </div>
-            <div class="text-xs text-gray-500 font-bold mb-1">НАВЫК 3</div>
-            <h3 class="text-xl font-bold mb-2">Сбор вопросов</h3>
-            <p class="text-gray-500 text-xs mb-4">Socratic Questioning</p>
-            <p class="text-gray-400 text-sm mb-8 leading-relaxed">Находим скрытые риски и неопределенность до траты бюджета.</p>
-            <div class="flex items-center justify-between mt-auto">
-                <div class="flex items-center gap-2 text-gray-500 text-xs">
-                    <i class="far fa-clock"></i> 20 мин
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-8">
+                    <div class="glass-card rounded-2xl p-8">
+                        <div class="flex items-center justify-between mb-8">
+                            <h2 class="text-xl font-bold flex items-center gap-4">
+                                <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-sm">1</span>
+                                Заполните вводные
+                            </h2>
+                            <button onclick="fillRandom()" class="text-purple-400 hover:text-purple-300 text-xs font-bold border border-purple-500/30 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                                <i class="fas fa-magic"></i> Заполни за меня
+                            </button>
+                        </div>
+
+                        <div id="skill-inputs" class="space-y-6">
+                            <!-- Inputs injected here -->
+                        </div>
+
+                        <button onclick="generatePrompt()" id="generate-btn" class="w-full bg-blue-600 hover:bg-blue-700 mt-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition-all">
+                            <i class="fas fa-sync-alt"></i> Собрать Промпт
+                        </button>
+                    </div>
+
+                    <!-- Prompt Output -->
+                    <div id="prompt-output-section" class="glass-card rounded-2xl p-8 hidden">
+                        <h2 class="text-xl font-bold flex items-center gap-4 mb-6">
+                            <span class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-sm">2</span>
+                            Готовый Промпт
+                        </h2>
+                        <div class="bg-black/40 p-6 rounded-xl border border-gray-800 relative group">
+                            <pre id="prompt-content" class="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed font-mono"></pre>
+                            <button class="absolute top-4 right-4 text-gray-500 hover:text-white">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                        <button id="run-gemini-btn" onclick="runGemini()" class="w-full mt-6 bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 py-4 rounded-xl font-black uppercase tracking-wider shadow-lg shadow-purple-500/20 flex items-center justify-center gap-3">
+                            <i class="fas fa-wand-magic-sparkles"></i> Прогнать через Gemini
+                        </button>
+                    </div>
+
+                    <!-- Gemini Analysis -->
+                    <div id="gemini-analysis-section" class="glass-card rounded-2xl p-8 border-purple-500/50 hidden">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-bold flex items-center gap-4">
+                                <i class="fas fa-comment-dots text-purple-400"></i> Ответ Нейросети
+                            </h2>
+                            <div class="text-green-500 text-xs font-bold">+150 XP</div>
+                        </div>
+                        <div id="analysis-content" class="text-gray-300 text-sm leading-relaxed prose prose-invert max-w-none">
+                            <!-- Loading state or content -->
+                        </div>
+                    </div>
                 </div>
-                <button class="text-emerald-400 font-bold text-sm hover:underline flex items-center gap-2">
-                    Повторить <i class="fas fa-chevron-right text-xs"></i>
-                </button>
             </div>
         </div>
 
-        <!-- Skill 4 -->
-        <div class="glass-card skill-card rounded-2xl p-6 relative">
-            <div class="absolute top-4 right-4 text-green-500">
-                <i class="fas fa-check-circle text-xl"></i>
-            </div>
-            <div class="w-12 h-12 bg-blue-900/30 rounded-xl flex items-center justify-center mb-6 border border-blue-500/30">
-                <i class="fas fa-project-diagram text-blue-400"></i>
-            </div>
-            <div class="text-xs text-gray-500 font-bold mb-1">НАВЫК 4</div>
-            <h3 class="text-xl font-bold mb-2">Декомпозиция (WBS)</h3>
-            <p class="text-gray-500 text-xs mb-4">Decomposition</p>
-            <p class="text-gray-400 text-sm mb-8 leading-relaxed">Превращаем «идею» в дерево конкретных работ с зависимостями.</p>
-            <div class="flex items-center justify-between mt-auto">
-                <div class="flex items-center gap-2 text-gray-500 text-xs">
-                    <i class="far fa-clock"></i> 20 мин
+        <!-- Leaderboard Modal -->
+        <div id="leaderboard-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+            <div class="glass-card w-full max-w-md rounded-3xl overflow-hidden border-purple-500/30">
+                <div class="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 flex justify-between items-center">
+                    <h3 class="text-xl font-black uppercase italic tracking-tighter">Лидерборд</h3>
+                    <button onclick="toggleLeaderboard()" class="text-white/60 hover:text-white"><i class="fas fa-times text-xl"></i></button>
                 </div>
-                <button class="text-emerald-400 font-bold text-sm hover:underline flex items-center gap-2">
-                    Повторить <i class="fas fa-chevron-right text-xs"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Skill 5 -->
-        <div class="glass-card skill-card rounded-2xl p-6 relative">
-            <div class="absolute top-4 right-4 text-green-500">
-                <i class="fas fa-check-circle text-xl"></i>
-            </div>
-            <div class="w-12 h-12 bg-red-900/30 rounded-xl flex items-center justify-center mb-6 border border-red-500/30">
-                <i class="fas fa-pen-nib text-red-400"></i>
-            </div>
-            <div class="text-xs text-gray-500 font-bold mb-1">НАВЫК 5</div>
-            <h3 class="text-xl font-bold mb-2">Редакторский отбор</h3>
-            <p class="text-gray-500 text-xs mb-4">Editorial Selection</p>
-            <p class="text-gray-400 text-sm mb-8 leading-relaxed">Выбираем одну сильную формулировку из множества вариантов.</p>
-            <div class="flex items-center justify-between mt-auto">
-                <div class="flex items-center gap-2 text-gray-500 text-xs">
-                    <i class="far fa-clock"></i> 15 мин
+                <div class="p-6 space-y-4 max-h-[60vh] overflow-y-auto" id="leaderboard-list">
+                    <!-- Users injected here -->
                 </div>
-                <button class="text-emerald-400 font-bold text-sm hover:underline flex items-center gap-2">
-                    Повторить <i class="fas fa-chevron-right text-xs"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Skill 6 -->
-        <div class="glass-card skill-card rounded-2xl p-6 relative">
-            <div class="absolute top-4 right-4 text-green-500">
-                <i class="fas fa-check-circle text-xl"></i>
-            </div>
-            <div class="w-12 h-12 bg-orange-900/30 rounded-xl flex items-center justify-center mb-6 border border-orange-500/30">
-                <i class="fas fa-balance-scale text-orange-400"></i>
-            </div>
-            <div class="text-xs text-gray-500 font-bold mb-1">НАВЫК 6</div>
-            <h3 class="text-xl font-bold mb-2">Спор стратегий</h3>
-            <p class="text-gray-500 text-xs mb-4">Deliberation</p>
-            <p class="text-gray-400 text-sm mb-8 leading-relaxed">Сталкиваем стратегии, чтобы понять цену жертвы.</p>
-            <div class="flex items-center justify-between mt-auto">
-                <div class="flex items-center gap-2 text-gray-500 text-xs">
-                    <i class="far fa-clock"></i> 25 мин
+                <div class="p-4 border-t border-gray-800 bg-black/20 text-center text-[10px] text-gray-600">
+                    Синхронизировано с базой данных (Online)
                 </div>
-                <button class="text-emerald-400 font-bold text-sm hover:underline flex items-center gap-2">
-                    Повторить <i class="fas fa-chevron-right text-xs"></i>
-                </button>
             </div>
         </div>
-    </main>
+    </div>
 
-    <footer class="max-w-7xl mx-auto mt-20 text-center text-gray-600 text-sm border-t border-gray-900 pt-8 mb-8">
-        &copy; 2026 AI Mindset Gym. Все права защищены.
-    </footer>
+    <script>
+        const skills = {
+            1: { id: 1, title: 'Постановка задачи', slug: 'problem-framing', icon: 'fas fa-bullseye', color: 'blue', time: '10 мин', desc: 'Убираем расплывчатость. Формулируем задачу так, чтобы исключить недели обсуждений.', detail: 'Деньги сгорают не из-за «плохого ИИ», а из-за того, что мы ставим задачи «на тему», а не на результат.', exercise: 'Одна фраза, один критерий', inputs: [
+                { label: 'Цель (1 фраза)', placeholder: 'Хочу увеличить количество лидов...', type: 'input' },
+                { label: 'Метрика успеха', placeholder: '+20% к концу квартала', type: 'input' },
+                { label: 'Ограничение', placeholder: 'Бюджет 0 рублей', type: 'input' },
+                { label: 'Анти-цель', placeholder: 'Не снижаем качество ради количества', type: 'input' }
+            ]},
+            2: { id: 2, title: 'Архитектор контекста', slug: 'context-packaging', icon: 'fas fa-layer-group', color: 'purple', time: '15 мин', desc: 'Упаковываем вводные данные в компактный пакет для точного результата.', detail: 'Качество ответа ИИ зависит от полноты и компактности контекста. Представьте, что вы нанимаете консультанта за $5000/час.', exercise: 'Контекст-пакет на 12 строк', inputs: [
+                { label: 'Кто я / Роль', placeholder: 'Продакт-менеджер', type: 'input' },
+                { label: 'Продукт', placeholder: 'Курсы по дизайну', type: 'input' },
+                { label: 'Аудитория (ICP)', placeholder: 'Студенты', type: 'input' },
+                { label: 'Цель сейчас', placeholder: 'Запустить лендинг', type: 'input' },
+                { label: 'Что пробовали', placeholder: 'Таргет', type: 'input' },
+                { label: 'Ограничения', placeholder: 'Дедлайн 3 дня', type: 'input' },
+                { label: 'Стиль', placeholder: 'Дерзкий', type: 'input' },
+                { label: 'Формат ответа', placeholder: 'Структура страницы', type: 'input' }
+            ]},
+            3: { id: 3, title: 'Сбор вопросов', slug: 'socratic-questioning', icon: 'fas fa-question-circle', color: 'green', time: '20 мин', desc: 'Находим скрытые риски и неопределенность до траты бюджета.', detail: 'Провалы случаются из-за незаданных вовремя вопросов. ИИ поможет вытащить то, что вы упустили.', exercise: '15 вопросов -> 5 главных', inputs: [
+                { label: 'Ситуация / Решение', placeholder: 'Хотим выходить на рынок Латам...', type: 'textarea' }
+            ]},
+            4: { id: 4, title: 'Декомпозиция (WBS)', slug: 'decomposition', icon: 'fas fa-project-diagram', color: 'blue', time: '20 мин', desc: 'Превращаем «идею» в дерево конкретных работ с зависимостями.', detail: 'Цель без плана — это мечта. Декомпозиция показывает блоки.', exercise: 'WBS без фантазий', inputs: [
+                { label: 'Цель', placeholder: 'Запустить подкаст за месяц', type: 'input' }
+            ]},
+            5: { id: 5, title: 'Редакторский отбор', slug: 'editorial-selection', icon: 'fas fa-pen-nib', color: 'red', time: '15 мин', desc: 'Выбираем одну сильную формулировку из множества вариантов.', detail: 'Выигрывает тот, кто быстро выбирает лучшее и дожимает.', exercise: '3 гипотезы -> 1 победитель', inputs: [
+                { label: 'Что пишем?', placeholder: 'Заголовок рассылки', type: 'input' },
+                { label: 'Контекст', placeholder: 'Продаем аутсорс банкам', type: 'input' }
+            ]},
+            6: { id: 6, title: 'Спор стратегий', slug: 'deliberation', icon: 'fas fa-balance-scale', color: 'orange', time: '25 мин', desc: 'Сталкиваем стратегии, чтобы понять цену жертвы.', detail: 'Любое решение — это обмен. Если конфликт не проговорить, вы заплатите позже.', exercise: 'Два стула', inputs: [
+                { label: 'Позиция А', placeholder: 'Быстро и дешево', type: 'input' },
+                { label: 'Позиция Б', placeholder: 'Качественно и долго', type: 'input' },
+                { label: 'Контекст', placeholder: 'Стартап, мало денег', type: 'input' }
+            ]},
+            7: { id: 7, title: 'Верификация', slug: 'falsification', icon: 'fas fa-search-minus', color: 'red', time: '20 мин', desc: 'Ищем способ БЫСТРО убить идею, чтобы не тратить месяцы.', detail: 'Самые дорогие ошибки — это идеи, которые долго не убивали.', exercise: 'Тест на фальсификацию', inputs: [
+                { label: 'Гипотеза', placeholder: 'Люди купят подписку за 500р', type: 'input' }
+            ]},
+            8: { id: 8, title: 'Структурирование', slug: 'transformation', icon: 'fas fa-table', color: 'cyan', time: '20 мин', desc: 'Превращаем хаос заметок в управленческие таблицы.', detail: 'Система побеждает хаос.', exercise: 'Свалка -> Таблица действий', inputs: [
+                { label: 'Текст (хаос)', placeholder: 'Текст встречи...', type: 'textarea' }
+            ]},
+            9: { id: 9, title: 'Перенос стиля', slug: 'tone-of-voice', icon: 'fas fa-feather-alt', color: 'yellow', time: '15 мин', desc: 'Учим ИИ писать вашим голосом.', detail: 'Тексты «от бота» убивают доверие. Научим ИИ мимикрировать.', exercise: 'Стиль-слепок', inputs: [
+                { label: 'Пример стиля', placeholder: 'Ваш лучший пост...', type: 'textarea' },
+                { label: 'Тема нового текста', placeholder: 'Как отдыхать', type: 'input' }
+            ]},
+            10: { id: 10, title: 'Промпт-дебаг', slug: 'debug', icon: 'fas fa-sync', color: 'gray', time: '25 мин', desc: 'Исправляем плохие ответы итерациями.', detail: 'Первый ответ всегда плохой. Мастерство в том, как вы правите.', exercise: 'Работа над ошибками', inputs: [
+                { label: 'Исходный промпт', placeholder: 'Напиши статью про...', type: 'textarea' },
+                { label: 'Что не нравится', placeholder: 'Слишком формально', type: 'input' }
+            ]}
+        };
+
+        let state = {
+            xp: 0,
+            level: 1,
+            completed: [],
+            view: 'dashboard',
+            activeSkill: null
+        };
+
+        // Initialize from LocalStorage
+        const saved = localStorage.getItem('ai_gym_state');
+        if (saved) {
+            state = JSON.parse(saved);
+        }
+
+        function save() {
+            localStorage.setItem('ai_gym_state', JSON.stringify(state));
+            updateHeader();
+        }
+
+        function updateHeader() {
+            document.getElementById('xp-display').textContent = state.xp;
+            document.getElementById('level-display').textContent = Math.floor(state.xp / 1000) + 1;
+            document.getElementById('level-progress').style.width = (state.xp % 1000) / 10 + '%';
+            document.getElementById('overall-progress').textContent = Math.round((state.completed.length / 10) * 100) + '%';
+        }
+
+        function showDashboard() {
+            document.getElementById('dashboard-view').classList.remove('hidden-view');
+            document.getElementById('skill-view').classList.add('hidden-view');
+            renderCards();
+        }
+
+        function renderCards() {
+            const grid = document.getElementById('skills-grid');
+            grid.innerHTML = '';
+            Object.values(skills).forEach(s => {
+                const isDone = state.completed.includes(s.slug);
+                const card = document.createElement('div');
+                card.className = `glass-card skill-card rounded-2xl p-6 relative cursor-pointer ${isDone ? 'border-green-500/50' : ''}`;
+                card.onclick = () => openSkill(s.id);
+                card.innerHTML = `
+                    ${isDone ? '<div class="absolute top-4 right-4 text-green-500"><i class="fas fa-check-circle text-xl"></i></div>' : ''}
+                    <div class="w-12 h-12 bg-${s.color}-900/30 rounded-xl flex items-center justify-center mb-6 border border-${s.color}-500/30">
+                        <i class="${s.icon} text-${s.color}-400 text-xl"></i>
+                    </div>
+                    <div class="text-xs text-gray-500 font-bold mb-1 uppercase tracking-wider">Навык ${s.id}</div>
+                    <h3 class="text-xl font-bold mb-1">${s.title}</h3>
+                    <p class="text-gray-500 text-[10px] mb-4 font-mono uppercase">${s.slug.replace('-', ' ')}</p>
+                    <p class="text-gray-400 text-sm mb-8 leading-relaxed line-clamp-2">${s.desc}</p>
+                    <div class="flex items-center justify-between mt-auto">
+                        <div class="flex items-center gap-2 text-gray-500 text-xs font-medium">
+                            <i class="far fa-clock"></i> ${s.time}
+                        </div>
+                        <span class="text-emerald-400 font-bold text-xs hover:underline flex items-center gap-2">
+                            ${isDone ? 'Повторить' : 'Начать'} <i class="fas fa-chevron-right text-[10px]"></i>
+                        </span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openSkill(id) {
+            const s = skills[id];
+            state.activeSkill = s;
+            document.getElementById('dashboard-view').classList.add('hidden-view');
+            document.getElementById('skill-view').classList.remove('hidden-view');
+            
+            document.getElementById('skill-nav-number').textContent = `НАВЫК #${s.id}`;
+            document.getElementById('skill-description-detail').textContent = s.detail;
+            document.getElementById('skill-exercise-name').textContent = s.exercise;
+            document.getElementById('skill-status-tag').textContent = state.completed.includes(s.slug) ? 'Сделано' : 'Доступно';
+            document.getElementById('skill-status-tag').className = state.completed.includes(s.slug) ? 
+                'bg-green-500/10 text-green-500 text-[10px] px-2 py-0.5 rounded uppercase font-bold' : 
+                'bg-blue-500/10 text-blue-500 text-[10px] px-2 py-0.5 rounded uppercase font-bold';
+
+            const inputContainer = document.getElementById('skill-inputs');
+            inputContainer.innerHTML = '';
+            s.inputs.forEach((inp, idx) => {
+                const div = document.createElement('div');
+                if (inp.type === 'input') {
+                    div.innerHTML = `
+                        <label class="block text-gray-400 text-xs font-bold mb-2 uppercase tracking-wide">${inp.label}</label>
+                        <input type="text" id="inp-${idx}" placeholder="${inp.placeholder}" class="w-full p-3 rounded-xl">
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <label class="block text-gray-400 text-xs font-bold mb-2 uppercase tracking-wide">${inp.label}</label>
+                        <textarea id="inp-${idx}" rows="4" placeholder="${inp.placeholder}" class="w-full p-3 rounded-xl"></textarea>
+                    `;
+                }
+                inputContainer.appendChild(div);
+            });
+
+            document.getElementById('prompt-output-section').classList.add('hidden');
+            document.getElementById('gemini-analysis-section').classList.add('hidden');
+            window.scrollTo(0,0);
+        }
+
+        function fillRandom() {
+            state.activeSkill.inputs.forEach((inp, idx) => {
+                document.getElementById(`inp-${idx}`).value = inp.placeholder.replace('Например: ', '');
+            });
+        }
+
+        function generatePrompt() {
+            const btn = document.getElementById('generate-btn');
+            btn.innerHTML = '<div class="loader"></div> Сборка...';
+            
+            setTimeout(() => {
+                const s = state.activeSkill;
+                const vals = s.inputs.map((_, i) => document.getElementById(`inp-${i}`).value);
+                let content = "";
+                
+                if (s.id === 1) content = `Проверь мою постановку задачи на ошибки. Цель: ${vals[0]}. Метрика: ${vals[1]}. Ограничение: ${vals[2]}. Анти-цель: ${vals[3]}.`;
+                else if (s.id === 2) content = `Роль: ${vals[0]}. Продукт: ${vals[1]}. ICP: ${vals[2]}. Цель: ${vals[3]}. Опыт: ${vals[4]}. Лимиты: ${vals[5]}. Стиль: ${vals[6]}. Формат: ${vals[7]}.`;
+                else content = `Выполни задачу "${s.title}" используя вводные: ${vals.join(', ')}`;
+
+                document.getElementById('prompt-content').textContent = content;
+                document.getElementById('prompt-output-section').classList.remove('hidden');
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> Обновить Промпт';
+            }, 800);
+        }
+
+        function runGemini() {
+            const btn = document.getElementById('run-gemini-btn');
+            const analysisSec = document.getElementById('gemini-analysis-section');
+            const analysisContent = document.getElementById('analysis-content');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<div class="loader"></div> Gemini думает...';
+            analysisSec.classList.remove('hidden');
+            analysisContent.innerHTML = '<p class="text-gray-500 italic">Идет глубокий анализ вашей задачи...</p>';
+
+            setTimeout(() => {
+                const s = state.activeSkill;
+                let result = `
+                    <h4 class="text-white font-bold mb-4">Разбор от Gemini 1.5 Pro:</h4>
+                    <p class="mb-4">Ваш промпт выглядит солидно, но я нашел 2 зоны роста. В контексте вашей цели по навыку <strong>${s.title}</strong>, стоит добавить больше деталей в блоке ограничений.</p>
+                    <ul class="space-y-2 mb-4">
+                        <li class="flex gap-2"><i class="fas fa-check text-green-500 mt-1"></i> <span><strong>Сила:</strong> Отлично сформулирована метрика успеха.</span></li>
+                        <li class="flex gap-2"><i class="fas fa-exclamation-triangle text-yellow-500 mt-1"></i> <span><strong>Риск:</strong> ИИ может выдать слишком банальный результат без примеров "как надо".</span></li>
+                    </ul>
+                    <div class="bg-blue-500/10 p-4 rounded-lg border border-blue-500/20">
+                        <p class="text-xs font-bold text-blue-400 mb-2 uppercase">Совет:</p>
+                        <p class="text-sm">Используйте технику "Chain of Thought", чтобы ИИ сначала расписал логику, а потом дал результат.</p>
+                    </div>
+                `;
+                analysisContent.innerHTML = result;
+                btn.innerHTML = '<i class="fas fa-check"></i> Анализ завершен';
+                
+                if (!state.completed.includes(s.slug)) {
+                    state.completed.push(s.slug);
+                    state.xp += 250;
+                    save();
+                }
+            }, 2500);
+        }
+
+        function toggleLeaderboard() {
+            const modal = document.getElementById('leaderboard-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) renderLeaderboard();
+        }
+
+        function renderLeaderboard() {
+            const list = document.getElementById('leaderboard-list');
+            const users = [
+                { name: 'Stas Shevchuk', xp: 2320, lvl: 8 },
+                { name: 'Andrey Bryn', xp: 2170, lvl: 8 },
+                { name: 'Вы (Guest)', xp: state.xp, lvl: Math.floor(state.xp/1000)+1, self: true },
+                { name: 'Yana', xp: 1920, lvl: 7 },
+                { name: 'Vadym', xp: 1560, lvl: 6 }
+            ].sort((a,b) => b.xp - a.xp);
+
+            list.innerHTML = users.map((u, i) => `
+                <div class="flex items-center justify-between p-3 rounded-xl ${u.self ? 'bg-blue-600/20 border border-blue-500/50' : 'bg-white/5'}">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-bold text-gray-500 w-4">${i+1}</span>
+                        <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-[10px] font-bold">
+                            ${u.name.substring(0,2).toUpperCase()}
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold ${u.self ? 'text-blue-400' : ''}">${u.name}</div>
+                            <div class="text-[10px] text-gray-500 uppercase">Lvl ${u.lvl} • Master</div>
+                        </div>
+                    </div>
+                    <div class="text-sm font-black text-white">${u.xp} <span class="text-gray-500 text-[10px]">XP</span></div>
+                </div>
+            `).join('');
+        }
+
+        // Init
+        updateHeader();
+        showDashboard();
+    </script>
 </body>
 </html>
