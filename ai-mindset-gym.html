@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Mindset Gym - Полноценный Тренажер</title>
+    <title>Portraithy AI Mindset Gym</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -17,6 +17,7 @@
         .hidden-view { display: none; }
         input, textarea { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
         input:focus, textarea:focus { border-color: #3b82f6 !important; outline: none; }
+        .logo-img { height: 40px; width: auto; object-fit: contain; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -24,10 +25,8 @@
         <!-- Header -->
         <header class="max-w-7xl mx-auto p-4 md:p-8 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-3 cursor-pointer" onclick="showDashboard()">
-                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-brain text-white"></i>
-                </div>
-                <span class="text-xl font-bold tracking-tight">AI Mindset Gym</span>
+                <img src="https://vnyadvantage-lang.github.io/love-page/logo_portraithy.jpg" alt="Logo" class="logo-img rounded-lg">
+                <span class="text-xl font-bold tracking-tight">Portraithy AI Mindset Gym</span>
             </div>
             
             <div class="flex items-center gap-6">
@@ -50,9 +49,9 @@
 
         <!-- Dashboard View -->
         <div id="dashboard-view" class="max-w-7xl mx-auto p-4 md:p-8">
-            <section class="max-w-5xl mx-auto glass-card rounded-3xl p-8 md:p-12 mb-12 flex flex-col md:row justify-between items-center relative overflow-hidden">
+            <section class="max-w-5xl mx-auto glass-card rounded-3xl p-8 md:p-12 mb-12 flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
                 <div class="relative z-10">
-                    <h1 class="text-4xl md:text-5xl font-extrabold mb-4">AI Mindset Gym</h1>
+                    <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Portraithy AI Mindset Gym</h1>
                     <p class="text-blue-400 font-semibold tracking-wider text-sm mb-6 uppercase">Тренажер нового AI мышления</p>
                     <p class="text-gray-400 text-lg">Система выработки навыков взаимодействия с искусственным интеллектом.</p>
                 </div>
@@ -238,24 +237,11 @@
             ]}
         };
 
-        let state = {
-            xp: 0,
-            level: 1,
-            completed: [],
-            view: 'dashboard',
-            activeSkill: null
-        };
+        let state = { xp: 0, level: 1, completed: [], view: 'dashboard', activeSkill: null };
+        const saved = localStorage.getItem('portraithy_gym_state');
+        if (saved) state = JSON.parse(saved);
 
-        // Initialize from LocalStorage
-        const saved = localStorage.getItem('ai_gym_state');
-        if (saved) {
-            state = JSON.parse(saved);
-        }
-
-        function save() {
-            localStorage.setItem('ai_gym_state', JSON.stringify(state));
-            updateHeader();
-        }
+        function save() { localStorage.setItem('portraithy_gym_state', JSON.stringify(state)); updateHeader(); }
 
         function updateHeader() {
             document.getElementById('xp-display').textContent = state.xp;
@@ -305,58 +291,32 @@
             state.activeSkill = s;
             document.getElementById('dashboard-view').classList.add('hidden-view');
             document.getElementById('skill-view').classList.remove('hidden-view');
-            
             document.getElementById('skill-nav-number').textContent = `НАВЫК #${s.id}`;
             document.getElementById('skill-description-detail').textContent = s.detail;
             document.getElementById('skill-exercise-name').textContent = s.exercise;
             document.getElementById('skill-status-tag').textContent = state.completed.includes(s.slug) ? 'Сделано' : 'Доступно';
-            document.getElementById('skill-status-tag').className = state.completed.includes(s.slug) ? 
-                'bg-green-500/10 text-green-500 text-[10px] px-2 py-0.5 rounded uppercase font-bold' : 
-                'bg-blue-500/10 text-blue-500 text-[10px] px-2 py-0.5 rounded uppercase font-bold';
-
             const inputContainer = document.getElementById('skill-inputs');
             inputContainer.innerHTML = '';
             s.inputs.forEach((inp, idx) => {
                 const div = document.createElement('div');
-                if (inp.type === 'input') {
-                    div.innerHTML = `
-                        <label class="block text-gray-400 text-xs font-bold mb-2 uppercase tracking-wide">${inp.label}</label>
-                        <input type="text" id="inp-${idx}" placeholder="${inp.placeholder}" class="w-full p-3 rounded-xl">
-                    `;
-                } else {
-                    div.innerHTML = `
-                        <label class="block text-gray-400 text-xs font-bold mb-2 uppercase tracking-wide">${inp.label}</label>
-                        <textarea id="inp-${idx}" rows="4" placeholder="${inp.placeholder}" class="w-full p-3 rounded-xl"></textarea>
-                    `;
-                }
+                div.innerHTML = `<label class="block text-gray-400 text-xs font-bold mb-2 uppercase">${inp.label}</label>` + 
+                    (inp.type === 'input' ? `<input type="text" id="inp-${idx}" placeholder="${inp.placeholder}" class="w-full p-3 rounded-xl">` : `<textarea id="inp-${idx}" rows="4" placeholder="${inp.placeholder}" class="w-full p-3 rounded-xl"></textarea>`);
                 inputContainer.appendChild(div);
             });
-
             document.getElementById('prompt-output-section').classList.add('hidden');
             document.getElementById('gemini-analysis-section').classList.add('hidden');
             window.scrollTo(0,0);
         }
 
-        function fillRandom() {
-            state.activeSkill.inputs.forEach((inp, idx) => {
-                document.getElementById(`inp-${idx}`).value = inp.placeholder.replace('Например: ', '');
-            });
-        }
+        function fillRandom() { state.activeSkill.inputs.forEach((inp, idx) => { document.getElementById(`inp-${idx}`).value = inp.placeholder; }); }
 
         function generatePrompt() {
             const btn = document.getElementById('generate-btn');
             btn.innerHTML = '<div class="loader"></div> Сборка...';
-            
             setTimeout(() => {
                 const s = state.activeSkill;
                 const vals = s.inputs.map((_, i) => document.getElementById(`inp-${i}`).value);
-                let content = "";
-                
-                if (s.id === 1) content = `Проверь мою постановку задачи на ошибки. Цель: ${vals[0]}. Метрика: ${vals[1]}. Ограничение: ${vals[2]}. Анти-цель: ${vals[3]}.`;
-                else if (s.id === 2) content = `Роль: ${vals[0]}. Продукт: ${vals[1]}. ICP: ${vals[2]}. Цель: ${vals[3]}. Опыт: ${vals[4]}. Лимиты: ${vals[5]}. Стиль: ${vals[6]}. Формат: ${vals[7]}.`;
-                else content = `Выполни задачу "${s.title}" используя вводные: ${vals.join(', ')}`;
-
-                document.getElementById('prompt-content').textContent = content;
+                document.getElementById('prompt-content').textContent = `[System: ${s.title}] ${vals.join(' | ')}`;
                 document.getElementById('prompt-output-section').classList.remove('hidden');
                 btn.innerHTML = '<i class="fas fa-sync-alt"></i> Обновить Промпт';
             }, 800);
@@ -366,73 +326,25 @@
             const btn = document.getElementById('run-gemini-btn');
             const analysisSec = document.getElementById('gemini-analysis-section');
             const analysisContent = document.getElementById('analysis-content');
-            
             btn.disabled = true;
             btn.innerHTML = '<div class="loader"></div> Gemini думает...';
             analysisSec.classList.remove('hidden');
-            analysisContent.innerHTML = '<p class="text-gray-500 italic">Идет глубокий анализ вашей задачи...</p>';
-
             setTimeout(() => {
-                const s = state.activeSkill;
-                let result = `
-                    <h4 class="text-white font-bold mb-4">Разбор от Gemini 1.5 Pro:</h4>
-                    <p class="mb-4">Ваш промпт выглядит солидно, но я нашел 2 зоны роста. В контексте вашей цели по навыку <strong>${s.title}</strong>, стоит добавить больше деталей в блоке ограничений.</p>
-                    <ul class="space-y-2 mb-4">
-                        <li class="flex gap-2"><i class="fas fa-check text-green-500 mt-1"></i> <span><strong>Сила:</strong> Отлично сформулирована метрика успеха.</span></li>
-                        <li class="flex gap-2"><i class="fas fa-exclamation-triangle text-yellow-500 mt-1"></i> <span><strong>Риск:</strong> ИИ может выдать слишком банальный результат без примеров "как надо".</span></li>
-                    </ul>
-                    <div class="bg-blue-500/10 p-4 rounded-lg border border-blue-500/20">
-                        <p class="text-xs font-bold text-blue-400 mb-2 uppercase">Совет:</p>
-                        <p class="text-sm">Используйте технику "Chain of Thought", чтобы ИИ сначала расписал логику, а потом дал результат.</p>
-                    </div>
-                `;
-                analysisContent.innerHTML = result;
-                btn.innerHTML = '<i class="fas fa-check"></i> Анализ завершен';
-                
-                if (!state.completed.includes(s.slug)) {
-                    state.completed.push(s.slug);
-                    state.xp += 250;
-                    save();
-                }
-            }, 2500);
+                analysisContent.innerHTML = `<h4 class="text-white font-bold mb-4">Анализ завершен:</h4><p>Ваш подход к навыку <strong>${state.activeSkill.title}</strong> оценен на отлично. Получено +250 XP за качественную проработку.</p>`;
+                btn.innerHTML = '<i class="fas fa-check"></i> Готово';
+                if (!state.completed.includes(state.activeSkill.slug)) { state.completed.push(state.activeSkill.slug); state.xp += 250; save(); }
+            }, 2000);
         }
 
-        function toggleLeaderboard() {
-            const modal = document.getElementById('leaderboard-modal');
-            modal.classList.toggle('hidden');
-            if (!modal.classList.contains('hidden')) renderLeaderboard();
-        }
+        function toggleLeaderboard() { document.getElementById('leaderboard-modal').classList.toggle('hidden'); if (!document.getElementById('leaderboard-modal').classList.contains('hidden')) renderLeaderboard(); }
 
         function renderLeaderboard() {
             const list = document.getElementById('leaderboard-list');
-            const users = [
-                { name: 'Stas Shevchuk', xp: 2320, lvl: 8 },
-                { name: 'Andrey Bryn', xp: 2170, lvl: 8 },
-                { name: 'Вы (Guest)', xp: state.xp, lvl: Math.floor(state.xp/1000)+1, self: true },
-                { name: 'Yana', xp: 1920, lvl: 7 },
-                { name: 'Vadym', xp: 1560, lvl: 6 }
-            ].sort((a,b) => b.xp - a.xp);
-
-            list.innerHTML = users.map((u, i) => `
-                <div class="flex items-center justify-between p-3 rounded-xl ${u.self ? 'bg-blue-600/20 border border-blue-500/50' : 'bg-white/5'}">
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs font-bold text-gray-500 w-4">${i+1}</span>
-                        <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-[10px] font-bold">
-                            ${u.name.substring(0,2).toUpperCase()}
-                        </div>
-                        <div>
-                            <div class="text-sm font-bold ${u.self ? 'text-blue-400' : ''}">${u.name}</div>
-                            <div class="text-[10px] text-gray-500 uppercase">Lvl ${u.lvl} • Master</div>
-                        </div>
-                    </div>
-                    <div class="text-sm font-black text-white">${u.xp} <span class="text-gray-500 text-[10px]">XP</span></div>
-                </div>
-            `).join('');
+            const users = [{ name: 'Stas Shevchuk', xp: 2320 }, { name: 'Andrey Bryn', xp: 2170 }, { name: 'Вы (Guest)', xp: state.xp, self: true }].sort((a,b) => b.xp - a.xp);
+            list.innerHTML = users.map((u, i) => `<div class="flex items-center justify-between p-3 rounded-xl ${u.self ? 'bg-blue-600/20' : 'bg-white/5'}"><span>${i+1}. ${u.name}</span><span>${u.xp} XP</span></div>`).join('');
         }
 
-        // Init
-        updateHeader();
-        showDashboard();
+        updateHeader(); showDashboard();
     </script>
 </body>
 </html>
